@@ -19,10 +19,11 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
 
   const { user, accessToken, refreshToken, permissionKeys } = await authService.verifyOTPAndLogin(otp);
 
+  const isProduction = process.env.NODE_ENV === "production";
   const cookieOptions = {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   };
 
   res.cookie("accessjwtoken", accessToken, {
@@ -60,10 +61,11 @@ export const refreshToken = catchAsync(async (req, res, next) => {
 
   const { newAccessToken } = await authService.refreshAccessToken(incomingRefreshToken);
 
+  const isProduction = process.env.NODE_ENV === "production";
   res.cookie("accessjwtoken", newAccessToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: "strict",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     expires: new Date(
       Date.now() + process.env.JWT_ACCESS_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
@@ -81,10 +83,11 @@ export const logout = catchAsync(async (req, res, next) => {
 
   await authService.logoutUser(refreshToken);
 
+  const isProduction = process.env.NODE_ENV === "production";
   const option = {
     httpOnly: true,
-    secure: true,
-    sameSite: "strict",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   };
 
   res.clearCookie("accessjwtoken", option);

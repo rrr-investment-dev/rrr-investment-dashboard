@@ -6,6 +6,9 @@ import { globalErrorHandler } from "./common/middlewares/globalErrorHandler.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
+// Trust Render proxy for secure cookies
+app.enable("trust proxy");
+
 // Middleware to parse cookies
 app.use(cookieParser());
 
