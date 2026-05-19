@@ -5,6 +5,7 @@ import RefreshToken from "./refreshToken.model.js";
 import User from "../user/user.model.js";
 import { getEffectivePermissionKeysForUser } from "../../../common/Utils/permission.util.js";
 import AppErrorClass from "../../../common/Utils/AppErrorClass.js";
+import sendEmail from "../../../common/Utils/sendEmail.js";
 
 export const generateAccessAndRefreshTokens = async (user) => {
   try {
@@ -64,6 +65,32 @@ export const createAndSendOTP = async (identifier) => {
   });
 
   await otpDoc.save({ validateBeforeSave: false });
+
+  if (isEmail) {
+    const message = `Your login OTP is ${otp}. It is valid for 10 minutes.`;
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Login Verification</h2>
+        <p>Your One Time Password (OTP) for RRR Investments Dashboard is:</p>
+        <h1 style="color: #4f46e5; font-size: 32px; letter-spacing: 5px;">${otp}</h1>
+        <p>This OTP is valid for 10 minutes. Do not share this code with anyone.</p>
+      </div>
+    `;
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: "Your OTP for RRR Investments Dashboard",
+        message,
+        html,
+      });
+    } catch (error) {
+      await Otp.deleteMany({ userId: user._id });
+      throw new AppErrorClass("There was an error sending the OTP email. Try again later!", 500);
+    }
+  }
+
+  // TODO: Add SMS sending logic here if (isMobile)
 
   return { user, otp };
 };
