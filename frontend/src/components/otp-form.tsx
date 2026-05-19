@@ -39,6 +39,7 @@ export function OTPForm({
     onSuccess: (data) => {
       toast.success("OTP resent successfully!");
       console.log("New OTP:", data.otp);
+      toast.success("New OTP:", data.otp);
       setResendUntil(Date.now() + 60000);
     },
   });
