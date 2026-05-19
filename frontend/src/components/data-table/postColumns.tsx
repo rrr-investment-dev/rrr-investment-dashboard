@@ -5,6 +5,7 @@ import { DataTableRowActions } from "./row-actions";
 import { Badge } from "@/components/ui/badge";
 import type { PostApi } from "@/http/api";
 import { ExternalLink } from "lucide-react";
+import { BACKEND_URL } from "@/http/api";
 
 export const postColumns = (
   onAction: (type: "view" | "edit" | "delete" | "restore" | "toggleStatus", post: PostApi) => void,
@@ -19,7 +20,7 @@ export const postColumns = (
             {image ? (
               <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-slate-200 dark:border-zinc-800 shadow-sm">
                 <img
-                  src={`http://localhost:3000${image}`}
+                  src={`${BACKEND_URL}${image}`}
                   alt={row.original.title}
                   className="w-full h-full object-cover"
                 />

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPost, updatePost } from "@/http/api";
+import { createPost, updatePost, BACKEND_URL } from "@/http/api";
 import type { PostApi } from "@/http/api";
 import { toast } from "sonner";
 
@@ -73,7 +73,7 @@ type Props = {
 /* ---------------- Component ---------------- */
 export default function PostForm({ onSuccess, initialData }: Props) {
   const [preview, setPreview] = useState<string | null>(
-    initialData?.image ? `http://localhost:3000${initialData.image}` : null
+    initialData?.image ? `${BACKEND_URL}${initialData.image}` : null
   );
   const queryClient = useQueryClient();
 

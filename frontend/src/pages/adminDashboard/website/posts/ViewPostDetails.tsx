@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { fetchPostById } from "@/http/api";
+import { fetchPostById, BACKEND_URL } from "@/http/api";
 import {
    Loader2,
    ArrowLeft,
@@ -224,7 +224,7 @@ const ViewPostDetails = () => {
                      <div className="aspect-[4/3] rounded-lg overflow-hidden bg-slate-50 dark:bg-zinc-950 border border-slate-100 dark:border-zinc-800 group relative">
                         {post.image ? (
                            <img
-                              src={`http://localhost:3000${post.image}?t=${new Date(post.updatedAt || post.createdAt).getTime()}`}
+                              src={`${BACKEND_URL}${post.image}?t=${new Date(post.updatedAt || post.createdAt).getTime()}`}
                               alt={post.title}
                               className="w-full h-full object-cover"
                            />

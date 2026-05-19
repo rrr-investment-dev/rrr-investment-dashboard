@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createTeamMember, updateTeamMember } from "@/http/api";
+import { createTeamMember, updateTeamMember, BACKEND_URL } from "@/http/api";
 import type { TeamApi } from "@/http/api";
 import { toast } from "sonner";
 import ImageCropperDialog from "./ImageCropperDialog";
@@ -87,7 +87,7 @@ const SOCIAL_PLATFORMS = [
 /* ---------------- Component ---------------- */
 export default function TeamForm({ onSuccess, initialData }: Props) {
   const [preview, setPreview] = useState<string | null>(
-    initialData?.image ? `http://localhost:3000${initialData.image}` : null
+    initialData?.image ? `${BACKEND_URL}${initialData.image}` : null
   );
   const [sectorInput, setSectorInput] = useState("");
   const queryClient = useQueryClient();
