@@ -1,18 +1,26 @@
 import express from "express";
 const app = express();
-import adminModuleRoutes from "./dashboard/admin/modules/admin/adminModuleRoutes.js";
+import apiRoutes from "./routes/index.js";
 import AppErrorClass from "./common/Utils/AppErrorClass.js";
 import { globalErrorHandler } from "./common/middlewares/globalErrorHandler.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 // Middleware to parse cookies
 app.use(cookieParser());
 
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
-// Use the admin module routes
+app.use(
+  cors({
+    origin: "http://localhost:5173", // frontend
+    credentials: true, // allow cookies
+  }),
+);
 
-app.use("/api/users", adminModuleRoutes);
+// Use the master API router
+app.use("/api", apiRoutes);
 
 // Handle undefined routes
 

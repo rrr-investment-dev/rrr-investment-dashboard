@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "concurrently": "^9.2.1",
+    "winston": "^3.19.0"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm start --prefix backend\" \"npm run dev --prefix frontend\""
+  }
+}
