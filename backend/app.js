@@ -19,6 +19,7 @@ app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL || "http://localhost:5173",
+      process.env.WEBSITE_URL || "http://localhost:3001",
       "http://localhost:3001",
       "http://127.0.0.1:3001",
     ],
@@ -30,13 +31,11 @@ app.use(
 app.use("/api", apiRoutes);
 
 // Handle undefined routes
-
 app.all("/{*splat}", (req, res, next) => {
   next(new AppErrorClass(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
 // Global error handling middleware
-
 app.use(globalErrorHandler);
 
 export default app;
