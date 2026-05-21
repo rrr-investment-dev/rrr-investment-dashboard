@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/sidebar";
 // import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/auth/AuthContext";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, Link } from "react-router-dom";
+import { Bell } from "lucide-react";
 import { AppBreadcrumbs } from "@/components/app-breadcrumbs";
 import { useEffect, useState } from "react";
 
@@ -77,6 +78,14 @@ const DashboardLayout = () => {
                 </div>
               </div>
               <Separator orientation="vertical" className="h-8 mx-2 hidden md:block" />
+              <Link 
+                to="/dashboard/notifications" 
+                className="relative p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-all cursor-pointer mr-1 group"
+                title="View Notifications"
+              >
+                <Bell className="size-5 transition-transform group-hover:rotate-12 duration-200" />
+                <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-rose-500 ring-2 ring-slate-50 dark:ring-zinc-950 animate-pulse"></span>
+              </Link>
               <ModeToggle />
             </div>
           </header>

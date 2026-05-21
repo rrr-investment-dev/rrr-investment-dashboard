@@ -7,6 +7,7 @@ import {
   rootRedirectLoader,
 } from "./AuthLoaders";
 import Dashboard from "@/pages/adminDashboard/Dashboard";
+import Notifications from "@/pages/adminDashboard/Notifications";
 import AdminOverview from "@/pages/adminDashboard/admin/AdminOverview";
 import AdminUserRoleTypeMaster from "@/pages/adminDashboard/admin/role-types/AdminUserRoleTypeMaster";
 import AdminUserMaster from "@/pages/adminDashboard/admin/users/AdminUserMaster";
@@ -48,6 +49,11 @@ export const AppRouter = createBrowserRouter([
         index: true,
         element: <Dashboard />,
         handle: { breadcrumb: "Overview" },
+      },
+      {
+        path: "notifications",
+        element: <Notifications />,
+        handle: { breadcrumb: "Notifications" },
       },
       {
         path: "admin",

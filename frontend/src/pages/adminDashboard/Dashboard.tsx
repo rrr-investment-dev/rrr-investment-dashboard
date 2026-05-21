@@ -256,12 +256,12 @@ const Dashboard = () => {
                 ) : (
                   <h3 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">{stat.value}</h3>
                 )}
-                <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mt-0.5">{stat.title}</p>
-                <p className="text-[11px] text-slate-400 dark:text-zinc-600 mt-1">{stat.sub}</p>
+                <p className="text-xs font-bold text-slate-400 dark:text-zinc-400 uppercase tracking-wider mt-0.5">{stat.title}</p>
+                <p className="text-xs text-slate-500 dark:text-zinc-300 mt-1 font-medium">{stat.sub}</p>
               </CardContent>
-              <div 
-                className="h-0.5 w-full origin-left scale-x-75 group-hover:scale-x-100 opacity-20 dark:opacity-30 group-hover:opacity-100 transition-all duration-300" 
-                style={{ backgroundColor: stat.color }} 
+              <div
+                className="h-0.5 w-full origin-left scale-x-75 group-hover:scale-x-100 opacity-20 dark:opacity-30 group-hover:opacity-100 transition-all duration-300"
+                style={{ backgroundColor: stat.color }}
               />
             </Card>
           </motion.div>
@@ -270,7 +270,7 @@ const Dashboard = () => {
 
       {/* ── Module Hub ── */}
       <div>
-        <h2 className="text-xs font-black text-slate-400 dark:text-zinc-500 uppercase tracking-widest mb-4">System Modules</h2>
+        <h2 className="text-xs font-black text-slate-400 dark:text-zinc-400 uppercase tracking-widest mb-4">System Modules</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {modules.map((mod, i) => (
             <motion.div
@@ -287,7 +287,7 @@ const Dashboard = () => {
                       <mod.icon className={`w-4.5 h-4.5 ${mod.text}`} style={{ width: 18, height: 18 }} />
                     </div>
                     <h3 className={`text-sm font-black ${mod.text} mb-1`}>{mod.title}</h3>
-                    <p className="text-[11px] text-slate-500 dark:text-zinc-400 leading-relaxed flex-1 mb-3">{mod.description}</p>
+                    <p className="text-xs text-slate-500 dark:text-zinc-300 leading-relaxed flex-1 mb-3">{mod.description}</p>
                     <div className="flex flex-wrap gap-1">
                       {mod.badges.map((b) => (
                         <span key={b} className="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-white/60 dark:bg-zinc-900/60 text-slate-500 dark:text-zinc-400 border border-slate-100 dark:border-zinc-800">
@@ -311,7 +311,7 @@ const Dashboard = () => {
           <CardHeader className="flex flex-row items-center justify-between py-5 px-6 border-b border-slate-100 dark:border-zinc-800/80">
             <div>
               <CardTitle className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-wide">Recent Activity</CardTitle>
-              <CardDescription className="text-xs text-slate-400 dark:text-zinc-500 mt-0.5">Latest admin actions across all modules</CardDescription>
+              <CardDescription className="text-xs text-slate-400 dark:text-zinc-400 mt-0.5">Latest admin actions across all modules</CardDescription>
             </div>
           </CardHeader>
           <CardContent className="p-0 max-h-[480px] overflow-y-auto scrollbar-thin">
@@ -342,9 +342,9 @@ const Dashboard = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-slate-700 dark:text-slate-300">{item.action}</p>
-                        <p className="text-xs text-slate-400 dark:text-zinc-500 mt-0.5 truncate">{item.detail}</p>
+                        <p className="text-xs text-slate-400 dark:text-zinc-400 mt-0.5 truncate">{item.detail}</p>
                       </div>
-                      <span className="text-[11px] font-medium text-slate-300 dark:text-zinc-600 shrink-0 mt-0.5">{item.time}</span>
+                      <span className="text-xs font-semibold text-slate-400 dark:text-zinc-400 shrink-0 mt-0.5">{item.time}</span>
                     </div>
                   );
                 })
@@ -360,7 +360,7 @@ const Dashboard = () => {
               <Globe className="w-4 h-4 text-violet-500" />
               Website Module
             </CardTitle>
-            <CardDescription className="text-xs text-slate-400 dark:text-zinc-500 mt-0.5">Quick access to content management</CardDescription>
+            <CardDescription className="text-xs text-slate-400 dark:text-zinc-400 mt-0.5">Quick access to content management</CardDescription>
           </CardHeader>
           <CardContent className="p-4 space-y-2">
             {websiteQuickLinks.map((link, i) => (

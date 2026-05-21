@@ -64,28 +64,50 @@ export function LoginForm({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-6 w-full bg-slate-950/40 border border-slate-800/80 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-slate-800/100", className)} {...props}>
       <form onSubmit={handleLoginSubmit}>
-        <FieldGroup>
-          <div className="flex flex-col items-center gap-8 text-center">
-            <h1 className="text-xl font-bold">Welcome to RRR Investments.</h1>
+        <FieldGroup className="gap-6">
+          <div className="flex flex-col items-center gap-2 text-center mb-2">
+            <h1 className="text-2xl font-bold tracking-tight text-white">
+              Welcome to <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent font-extrabold">RRR Investments</span>
+            </h1>
+            <p className="text-slate-400 text-sm">Enter your credentials to access your dashboard</p>
           </div>
           <Field>
-            <FieldLabel htmlFor="email">Email / Mobile Number</FieldLabel>
+            <FieldLabel htmlFor="email" className="text-slate-300 text-xs font-semibold tracking-wide uppercase">Email / Mobile Number</FieldLabel>
             <Input
               id="email"
               ref={inputRef}
               placeholder="info@example.com / 9876543210"
               required
+              className="bg-slate-900/50 border-slate-800/80 text-white placeholder:text-slate-500 h-11 px-4 rounded-xl focus:border-blue-500/50 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-300 focus-visible:ring-0 focus-visible:border-blue-500/50"
             />
           </Field>
           <Field>
-            <Button type="submit">Login</Button>
+            <Button 
+              type="submit" 
+              className="w-full h-11 bg-[#00338D] hover:bg-[#002a75] text-white font-medium rounded-xl shadow-[0_4px_20px_rgba(0,51,141,0.25)] hover:shadow-[0_4px_25px_rgba(0,51,141,0.4)] active:scale-[0.98] transition-all duration-300 border-0 cursor-pointer"
+            >
+              Login
+            </Button>
           </Field>
-          <FieldSeparator>Or</FieldSeparator>
+          
+          <div className="relative flex items-center justify-center my-2">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-800/80"></div>
+            </div>
+            <span className="relative px-3 text-xs uppercase bg-[#090e1a] text-slate-500 font-semibold tracking-wider rounded-md">
+              Or
+            </span>
+          </div>
+
           <Field className="grid gap-4">
-            <Button variant="outline" type="button">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <Button 
+              variant="outline" 
+              type="button"
+              className="w-full h-11 bg-slate-900/50 border border-slate-800/80 hover:bg-slate-800/80 hover:border-slate-700 text-slate-200 hover:text-white rounded-xl transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer shadow-xs active:scale-[0.98]"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="size-5">
                 <path
                   d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
                   fill="currentColor"
@@ -96,7 +118,7 @@ export function LoginForm({
           </Field>
         </FieldGroup>
       </form>
-      <FieldDescription className="px-6 text-center">
+      <FieldDescription className="text-slate-500 text-xs px-2 text-center mt-2 [&>a]:text-slate-400 [&>a]:hover:text-blue-400 [&>a]:transition-colors [&>a]:underline-offset-4">
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
       </FieldDescription>
