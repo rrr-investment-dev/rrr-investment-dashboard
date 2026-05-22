@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     isActive: { type: Boolean, default: true },
+    image: { type: String, trim: true },
     usr_id: {
       type: String,
       unique: true,

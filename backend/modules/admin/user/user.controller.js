@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import User from "./user.model.js";
 import RoleType from "../roleType/roleType.model.js";
 import UserPermissionOverride from "../permissions/models/userPermissionOverride.model.js";
@@ -7,6 +9,18 @@ import AppErrorClass from "../../../common/Utils/AppErrorClass.js";
 import catchAsync from "../../../common/Utils/catchAsync.js";
 import mongoose from "mongoose";
 import { logActivity } from "../../../common/Utils/activityLogger.js";
+
+const deleteFileIfExists = (filePath) => {
+  if (!filePath) return;
+
+  try {
+    const normalizedPath = filePath.replace(/^\/+/, "").replace(/\\/g, "/");
+    const absolutePath = path.resolve(normalizedPath);
+    if (fs.existsSync(absolutePath)) fs.unlinkSync(absolutePath);
+  } catch (err) {
+    console.error("File delete error:", err);
+  }
+};
 
 // API's for User
 
@@ -56,9 +70,24 @@ export const createUser = catchAsync(async (req, res, next) => {
     mobile,
     email,
     role,
-    grantedPermissions = [],
-    revokedPermissions = [],
+    grantedPermissions: rawGranted = [],
+    revokedPermissions: rawRevoked = [],
   } = req.body;
+
+  let grantedPermissions = rawGranted;
+  let revokedPermissions = rawRevoked;
+
+  try {
+    if (typeof grantedPermissions === "string") {
+      grantedPermissions = JSON.parse(grantedPermissions);
+    }
+  } catch (err) {}
+
+  try {
+    if (typeof revokedPermissions === "string") {
+      revokedPermissions = JSON.parse(revokedPermissions);
+    }
+  } catch (err) {}
 
   const existingUser = await User.findOne({
     $or: [{ email }, { mobile }],
@@ -107,6 +136,11 @@ export const createUser = catchAsync(async (req, res, next) => {
   // Generate user ID
   const usr_id = `USR${String(nextNumber).padStart(3, "0")}`;
 
+  let image = undefined;
+  if (req.file) {
+    image = `/${req.file.path.replace(/\\/g, "/")}`;
+  }
+
   const user = await User.create({
     name,
     designation,
@@ -114,6 +148,7 @@ export const createUser = catchAsync(async (req, res, next) => {
     email,
     role,
     usr_id,
+    image,
   });
 
   let override;
@@ -199,9 +234,24 @@ export const updateUser = catchAsync(async (req, res, next) => {
     mobile,
     email,
     role,
-    grantedPermissions,
-    revokedPermissions,
+    grantedPermissions: rawGranted,
+    revokedPermissions: rawRevoked,
   } = req.body;
+
+  let grantedPermissions = rawGranted;
+  let revokedPermissions = rawRevoked;
+
+  try {
+    if (typeof grantedPermissions === "string") {
+      grantedPermissions = JSON.parse(grantedPermissions);
+    }
+  } catch (err) {}
+
+  try {
+    if (typeof revokedPermissions === "string") {
+      revokedPermissions = JSON.parse(revokedPermissions);
+    }
+  } catch (err) {}
 
   // Validate role if provided
   if (role !== undefined) {
@@ -227,6 +277,14 @@ export const updateUser = catchAsync(async (req, res, next) => {
   if (mobile !== undefined) updateData.mobile = mobile;
   if (email !== undefined) updateData.email = email;
   if (role !== undefined) updateData.role = role;
+
+  if (req.file) {
+    const existingUser = await User.findById(id);
+    if (existingUser && existingUser.image) {
+      deleteFileIfExists(existingUser.image);
+    }
+    updateData.image = `/${req.file.path.replace(/\\/g, "/")}`;
+  }
 
   // Update user
   const user = await User.findByIdAndUpdate(id, updateData, {

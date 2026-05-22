@@ -1,12 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 // import { api } from "@/http/api";
-import { fetchMe } from "@/http/api";
+import { fetchMe, BACKEND_URL } from "@/http/api";
 
 type User = {
   _id: string;
   name: string;
   email: string;
   permissions: string[];
+  avatar?: string;
 };
 
 type AuthContextType = {
@@ -37,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         name: user.name,
         email: user.email,
         permissions: permissionKeys,
+        avatar: user.image ? `${BACKEND_URL}${user.image}` : undefined,
       });
     } catch {
       setUser(null);

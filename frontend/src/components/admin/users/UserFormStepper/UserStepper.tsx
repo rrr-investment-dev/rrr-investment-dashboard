@@ -175,22 +175,25 @@ const UserStepper = ({ initialData, isEdit = false, onSuccess }: UserStepperProp
     const grantedPermissions = finalIds.filter(id => !baselineIds.includes(id));
     const revokedPermissions = baselineIds.filter(id => !finalIds.includes(id));
 
-    // Construct exact required payload
-    const finalPayload = {
-      usr_id: userData.usrId,
-      name: userData.fullName,
-      designation: userData.designation,
-      mobile: userData.mobile,
-      email: userData.email,
-      role: userData.role,
-      grantedPermissions,
-      revokedPermissions
-    };
+    // Construct exact required payload using FormData
+    const formData = new FormData();
+    formData.append("usr_id", userData.usrId);
+    formData.append("name", userData.fullName);
+    formData.append("designation", userData.designation);
+    formData.append("mobile", userData.mobile);
+    formData.append("email", userData.email);
+    formData.append("role", userData.role);
+    formData.append("grantedPermissions", JSON.stringify(grantedPermissions));
+    formData.append("revokedPermissions", JSON.stringify(revokedPermissions));
+
+    if (userData.image && userData.image.length > 0) {
+      formData.append("image", userData.image[0]);
+    }
 
     if (isEdit && initialData?.id) {
-      updateMutation.mutate({ id: initialData.id, data: finalPayload });
+      updateMutation.mutate({ id: initialData.id, data: formData });
     } else {
-      createMutation.mutate(finalPayload);
+      createMutation.mutate(formData);
     }
   };
 

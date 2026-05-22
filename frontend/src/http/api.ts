@@ -34,6 +34,7 @@ export type UserApi = {
   isActive: boolean;
   role: RoleApi | null;
   displayRoleName: string;
+  image?: string;
 };
 
 export type Permission = {
@@ -79,6 +80,7 @@ export type UserWithPermissionsApi = {
   __v: number;
   permissions: Permission[];
   permissionOverride: PermissionOverride | null;
+  image?: string;
 };
 
 export type PostApi = {
@@ -250,6 +252,7 @@ export const fetchUsers = async () => {
     roleId: user.role?._id ?? "",
     designation: user.designation,
     isActive: user.isActive,
+    image: user.image || "",
   }));
 };
 
@@ -314,13 +317,21 @@ export const changeStatusOfUser = async (id: string, isActive: boolean) => {
   return res.data;
 };
 
-export const createUser = async (data: any) => {
-  const res = await api.post("/users", data);
+export const createUser = async (data: FormData) => {
+  const res = await api.post("/users", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return res.data;
 };
 
-export const updateUser = async (id: string, data: any) => {
-  const res = await api.patch(`/users/${id}`, data);
+export const updateUser = async (id: string, data: FormData) => {
+  const res = await api.patch(`/users/${id}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return res.data;
 };
 

@@ -30,6 +30,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 import { Separator } from "@/components/ui/separator";
 import { Upload } from "lucide-react";
+import { getInitials } from "@/utils/userUtils";
 
 /* ---------------- Types ---------------- */
 type UserInfoValues = {
@@ -99,6 +100,8 @@ export default function UserInfoForm({ setIsValid, initialData, isEdit, onDataCh
   /* ---- image preview ---- */
   // eslint-disable-next-line react-hooks/incompatible-library
   const image = watch("image");
+  const fullName = watch("fullName");
+  
   useEffect(() => {
     if (image && image.length > 0) {
       const url = URL.createObjectURL(image[0]);
@@ -270,8 +273,10 @@ export default function UserInfoForm({ setIsValid, initialData, isEdit, onDataCh
             {/* ================= RIGHT IMAGE ================= */}
             <div className="flex flex-col items-center justify-center gap-6">
               <Avatar className="h-56 w-56 border shadow-sm">
-                <AvatarImage src={preview ?? undefined} />
-                <AvatarFallback className="text-3xl">U</AvatarFallback>
+                <AvatarImage src={preview ?? undefined} className="object-cover" />
+                <AvatarFallback className="text-3xl font-semibold bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400">
+                  {getInitials(fullName)}
+                </AvatarFallback>
               </Avatar>
 
               <FormField

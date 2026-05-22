@@ -49,6 +49,7 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
       email: user.email,
       mobile: user.mobile,
       role: user.role,
+      image: user.image,
     },
     permissions: permissionKeys,
     accessToken,

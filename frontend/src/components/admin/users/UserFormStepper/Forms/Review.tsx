@@ -28,6 +28,8 @@ type ReviewProps = {
   isEdit?: boolean;
 };
 
+import { getInitials } from "@/utils/userUtils";
+
 /* ---------------- Component ---------------- */
 
 export default function Review({
@@ -84,8 +86,8 @@ export default function Review({
             <div className="flex justify-center items-start">
               <Avatar className="h-40 w-40 border-2 shadow-sm rounded-full">
                 <AvatarImage src={userInfo.image} className="object-cover" />
-                <AvatarFallback className="text-4xl bg-slate-100 dark:bg-zinc-800 text-slate-400 dark:text-zinc-500 rounded-full">
-                  {userInfo.fullName?.[0]?.toUpperCase() ?? "U"}
+                <AvatarFallback className="text-4xl bg-slate-100 dark:bg-zinc-800 text-slate-400 dark:text-zinc-500 rounded-full font-semibold">
+                  {getInitials(userInfo.fullName)}
                 </AvatarFallback>
               </Avatar>
             </div>

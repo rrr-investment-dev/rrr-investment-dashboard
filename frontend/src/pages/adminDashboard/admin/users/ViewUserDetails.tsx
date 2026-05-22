@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { fetchUserWithPermissionById, fetchAllPermissions, type Permission } from "@/http/api";
+import { fetchUserWithPermissionById, fetchAllPermissions, type Permission, BACKEND_URL } from "@/http/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/utils/userUtils";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -205,9 +206,9 @@ const ViewUserDetails = () => {
                 <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-slate-200 dark:border-zinc-700/60 bg-slate-50 dark:bg-zinc-800/40 p-5">
                   <div className="relative">
                     <Avatar className="h-28 w-28 border-2 border-white dark:border-zinc-700 shadow-sm">
-                      <AvatarImage src="" />
+                      <AvatarImage src={userData.image ? `${BACKEND_URL}${userData.image}` : undefined} className="object-cover" />
                       <AvatarFallback className="text-3xl bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 font-semibold">
-                        {userData.name?.[0] ?? "U"}
+                        {getInitials(userData.name)}
                       </AvatarFallback>
                     </Avatar>
                     <div

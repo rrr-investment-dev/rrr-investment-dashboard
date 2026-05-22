@@ -2,8 +2,11 @@ import express from "express";
 import * as userController from "./user.controller.js";
 import * as authMiddleware from "../../../common/middlewares/authMiddleware.js";
 import { requirePermission } from "../../../common/middlewares/requirePermissionMiddleware.js";
+import { createUploader } from "../../../common/middlewares/upload.middleware.js";
 
 const router = express.Router();
+
+const uploadUserImage = createUploader({ folder: "users", prefix: "user", type: "image" });
 
 // User CRUD routes
 router
@@ -16,6 +19,7 @@ router
   .post(
     authMiddleware.protect,
     requirePermission("admin.userManagement.users.create"),
+    uploadUserImage.single("image"),
     userController.createUser,
   );
 
@@ -38,6 +42,7 @@ router
   .patch(
     authMiddleware.protect,
     requirePermission("admin.userManagement.users.update"),
+    uploadUserImage.single("image"),
     userController.updateUser,
   );
 
