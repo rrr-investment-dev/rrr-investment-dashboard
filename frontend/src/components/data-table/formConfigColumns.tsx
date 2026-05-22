@@ -53,7 +53,7 @@ export const getFormConfigColumns = (
       cell: ({ row }) => (
         <Badge
           variant="outline"
-          className="capitalize bg-slate-50 dark:bg-zinc-900 text-slate-600 dark:text-zinc-350 border-slate-200 dark:border-zinc-800 text-[10px] px-2 py-0"
+          className="capitalize bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800/60 text-[10px] font-bold px-2.5 py-0.5 tracking-wide"
         >
           {row.getValue("type")}
         </Badge>

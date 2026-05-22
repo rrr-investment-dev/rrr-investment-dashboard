@@ -20,9 +20,20 @@ import {
   Trash2,
   ListPlus,
   MousePointer2,
-  Calendar
+  Calendar,
+  Eye,
+  Smartphone,
+  Tablet,
+  Laptop
 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -80,6 +91,10 @@ const FormConfigMaster = () => {
   // State for delete confirmation
   const [fieldToDelete, setFieldToDelete] = useState<FormConfigApi | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  // State for Live Preview Dialog
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "tablet" | "mobile">("desktop");
 
   const form = useForm<FieldFormValues>({
     resolver: zodResolver(fieldSchema),
@@ -220,7 +235,7 @@ const FormConfigMaster = () => {
       <Tabs value={tab} onValueChange={setTab}>
         <WebsiteModuleHeader tabs={tabs} />
 
-        <div className={`grid grid-cols-1 ${tab === 'list' ? 'xl:grid-cols-[1fr_400px]' : ''} gap-6`}>
+        <div className="grid grid-cols-1 gap-6">
           <div className="space-y-6">
             <TabsContent value="list" className="mt-0 focus-visible:outline-none">
               <DataTable
@@ -253,6 +268,16 @@ const FormConfigMaster = () => {
                         <SelectItem value="inactive">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsPreviewOpen(true)}
+                      className="h-9 gap-2 border-blue-200 dark:border-blue-900/50 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:border-blue-300 dark:hover:border-blue-800 rounded-xl font-semibold transition-all"
+                    >
+                      <Eye className="h-4 w-4" />
+                      Preview Form
+                    </Button>
                   </div>
                 }
               />
@@ -442,103 +467,195 @@ const FormConfigMaster = () => {
             </TabsContent>
           </div>
 
-          {/* 🖼️ Right Side: Preview (Only shown on List tab) */}
-          {tab === "list" && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
-              <Card className="border-slate-200/60 dark:border-zinc-800 bg-card text-card-foreground shadow-sm rounded-xl overflow-hidden sticky top-6">
-                <div className="px-6 py-5 border-b border-slate-100 dark:border-zinc-800 flex items-center gap-3 bg-slate-50/30 dark:bg-zinc-900/40">
-                  <div className="bg-blue-100 dark:bg-blue-950/40 p-1.5 rounded-md">
-                    <Settings2 className="h-4 w-4 text-blue-600 dark:text-blue-450" />
+          {/* Live Preview Dialog */}
+          <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+            <DialogContent
+              className="max-w-5xl w-full p-0 gap-0 overflow-hidden border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-2xl"
+              showCloseButton={false}
+            >
+              {/* Dialog Header */}
+              <DialogHeader className="px-6 py-4 border-b border-slate-100 dark:border-zinc-800 bg-slate-50/60 dark:bg-zinc-900/60 flex-row items-center justify-between space-y-0">
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-100 dark:bg-blue-950/50 p-2 rounded-lg">
+                    <Eye className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm leading-none mb-1">Live Preview</h3>
-                    <p className="text-[10px] text-slate-400 dark:text-zinc-500 font-bold uppercase tracking-widest">Real-time appearance</p>
+                    <DialogTitle className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-none mb-1">
+                      Live Form Preview
+                    </DialogTitle>
+                    <DialogDescription className="text-[10px] text-slate-400 dark:text-zinc-500 font-bold uppercase tracking-widest">
+                      Real-time appearance on your website
+                    </DialogDescription>
                   </div>
                 </div>
-                <CardContent className="p-6">
-                  <div className="bg-slate-50 dark:bg-zinc-950 rounded-2xl p-6 border border-slate-100 dark:border-zinc-850 space-y-6">
-                    <div className="space-y-1">
-                      <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">Send an Inquiry</h3>
-                      <p className="text-xs text-slate-400 dark:text-zinc-500 font-medium">Fields updated in real-time</p>
-                    </div>
 
-                    <div className="space-y-5">
-                      {/* 📋 Unified Field Renderer for Preview */}
-                      {(() => {
-                        const renderField = (field: any, isNew: boolean = false) => (
-                          <div key={field._id || 'new-field'} className={`space-y-2 ${isNew ? 'p-3 rounded-xl border-2 border-dashed border-blue-200 dark:border-blue-900/30 bg-blue-50/30 dark:bg-blue-950/10 animate-in fade-in slide-in-from-right-4 duration-500' : ''}`}>
-                            <div className="flex items-center justify-between">
-                              <label className={`text-[10px] font-black uppercase tracking-widest ml-1 ${isNew ? 'text-blue-600 dark:text-blue-400' : 'text-slate-500 dark:text-zinc-400'}`}>
-                                {field.label || (isNew ? "Untitled Field" : "")}
-                                {field.required && <span className="text-rose-500 ml-0.5">*</span>}
-                              </label>
-                              {isNew && <span className="text-[8px] font-bold bg-blue-600 text-white px-1.5 py-0.5 rounded-full uppercase tracking-tighter">Pending</span>}
-                            </div>
+                {/* Device Switcher */}
+                <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-800/80 p-1 rounded-xl">
+                  <button
+                    onClick={() => setPreviewDevice("mobile")}
+                    title="Mobile"
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
+                      previewDevice === "mobile"
+                        ? "bg-white dark:bg-zinc-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                        : "text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300"
+                    }`}
+                  >
+                    <Smartphone className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">Mobile</span>
+                  </button>
+                  <button
+                    onClick={() => setPreviewDevice("tablet")}
+                    title="Tablet"
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
+                      previewDevice === "tablet"
+                        ? "bg-white dark:bg-zinc-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                        : "text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300"
+                    }`}
+                  >
+                    <Tablet className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">Tablet</span>
+                  </button>
+                  <button
+                    onClick={() => setPreviewDevice("desktop")}
+                    title="Desktop"
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
+                      previewDevice === "desktop"
+                        ? "bg-white dark:bg-zinc-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                        : "text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300"
+                    }`}
+                  >
+                    <Laptop className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">Desktop</span>
+                  </button>
 
-                            {/* Render based on type */}
-                            {field.type === 'textarea' ? (
-                              <div className="w-full h-20 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-2.5 text-[11px] text-slate-400 dark:text-zinc-500">
-                                {field.placeholder || "Message area..."}
+                  <div className="w-px h-5 bg-slate-200 dark:bg-zinc-700 mx-1" />
+
+                  <button
+                    onClick={() => setIsPreviewOpen(false)}
+                    className="flex items-center justify-center h-7 w-7 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-zinc-200 hover:bg-slate-200/60 dark:hover:bg-zinc-700 transition-all"
+                  >
+                    <span className="text-lg leading-none">×</span>
+                  </button>
+                </div>
+              </DialogHeader>
+
+              {/* Device Frame Viewport */}
+              <div className="bg-slate-100 dark:bg-zinc-950 p-6 md:p-8 flex items-start justify-center min-h-[520px] max-h-[72vh] overflow-y-auto">
+                <div
+                  className={`transition-all duration-500 ease-in-out w-full ${
+                    previewDevice === "mobile"
+                      ? "max-w-[375px]"
+                      : previewDevice === "tablet"
+                      ? "max-w-[640px]"
+                      : "max-w-full"
+                  }`}
+                >
+                  {/* Device chrome wrapper */}
+                  <div
+                    className={`transition-all duration-500 ${
+                      previewDevice === "mobile"
+                        ? "border-[10px] border-slate-800 dark:border-zinc-600 rounded-[2.5rem] shadow-2xl"
+                        : previewDevice === "tablet"
+                        ? "border-[8px] border-slate-700 dark:border-zinc-600 rounded-[1.5rem] shadow-xl"
+                        : "border-[6px] border-slate-600 dark:border-zinc-600 rounded-xl shadow-lg"
+                    }`}
+                  >
+                    {/* Browser/Device top bar */}
+                    {previewDevice !== "mobile" && (
+                      <div className="bg-slate-200 dark:bg-zinc-700 px-3 py-2 flex items-center gap-2 border-b border-slate-300 dark:border-zinc-600">
+                        <div className="flex gap-1.5">
+                          <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                          <div className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+                          <div className="h-2.5 w-2.5 rounded-full bg-green-400" />
+                        </div>
+                        <div className="flex-1 bg-white dark:bg-zinc-800 rounded-md px-3 py-0.5 text-[10px] text-slate-400 dark:text-zinc-500 font-mono truncate">
+                          yourdomain.com/contact
+                        </div>
+                      </div>
+                    )}
+                    {previewDevice === "mobile" && (
+                      <div className="bg-slate-800 dark:bg-zinc-700 px-4 py-2 flex items-center justify-between">
+                        <span className="text-[10px] text-slate-300 font-medium">9:41</span>
+                        <div className="flex gap-1">
+                          <div className="h-1.5 w-4 rounded bg-slate-400" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Form content */}
+                    <div className="bg-white dark:bg-zinc-900 p-5 space-y-5">
+                      <div className="space-y-1">
+                        <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">Send an Inquiry</h3>
+                        <p className="text-[11px] text-slate-400 dark:text-zinc-500">Fill in your details and we'll get back to you.</p>
+                      </div>
+
+                      <div className="space-y-4">
+                        {configs?.filter(f => f.isActive).map((field: any) => (
+                          <div key={field._id} className="space-y-1.5">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-zinc-400 ml-0.5">
+                              {field.label}
+                              {field.required && <span className="text-rose-500 ml-0.5">*</span>}
+                            </label>
+
+                            {field.type === "textarea" ? (
+                              <div className="w-full h-20 rounded-lg border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 px-3 py-2.5 text-[11px] text-slate-400 dark:text-zinc-500">
+                                {field.placeholder || "Your message..."}
                               </div>
-                            ) : field.type === 'select' ? (
-                              <div className="w-full h-10 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-2.5 text-[11px] text-slate-400 dark:text-zinc-500 flex items-center justify-between">
+                            ) : field.type === "select" ? (
+                              <div className="w-full h-9 rounded-lg border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 px-3 text-[11px] text-slate-400 dark:text-zinc-500 flex items-center justify-between">
                                 <span>{field.placeholder || "Select an option..."}</span>
-                                <Settings2 className="h-3 w-3 text-slate-300 dark:text-zinc-700" />
+                                <Settings2 className="h-3 w-3 text-slate-300 dark:text-zinc-600" />
                               </div>
-                            ) : (field.type === 'radio' || field.type === 'checkbox') ? (
-                              <div className="space-y-2 pl-1 pt-1">
+                            ) : (field.type === "radio" || field.type === "checkbox") ? (
+                              <div className="space-y-1.5 pl-1">
                                 {(field.options && field.options.length > 0) ? (
                                   field.options.map((opt: any, i: number) => (
-                                    <div key={i} className="flex items-center gap-2.5">
-                                      <div className={`h-4 w-4 rounded-${field.type === 'radio' ? 'full' : 'md'} border border-slate-300 dark:border-zinc-750 bg-white dark:bg-zinc-900`} />
-                                      <span className="text-[11px] font-medium text-slate-600 dark:text-zinc-300">{opt.label || `Option ${i + 1}`}</span>
+                                    <div key={i} className="flex items-center gap-2">
+                                      <div className={`h-3.5 w-3.5 shrink-0 rounded-${ field.type === "radio" ? "full" : "sm" } border border-slate-300 dark:border-zinc-600 bg-white dark:bg-zinc-800`} />
+                                      <span className="text-[11px] text-slate-600 dark:text-zinc-300">{opt.label}</span>
                                     </div>
                                   ))
                                 ) : (
-                                  <p className="text-[10px] text-slate-400 dark:text-zinc-500 italic">No options defined</p>
+                                  <p className="text-[10px] text-slate-400 italic">No options defined</p>
                                 )}
                               </div>
-                            ) : field.type === 'date' ? (
-                              <div className="w-full h-10 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-2.5 text-[11px] text-slate-400 dark:text-zinc-500 flex items-center justify-between">
+                            ) : field.type === "date" ? (
+                              <div className="w-full h-9 rounded-lg border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 px-3 text-[11px] text-slate-400 dark:text-zinc-500 flex items-center justify-between">
                                 <span>Pick a date...</span>
-                                <Calendar className="h-3.5 w-3.5 text-slate-300 dark:text-zinc-700" />
+                                <Calendar className="h-3.5 w-3.5 text-slate-300 dark:text-zinc-600" />
                               </div>
                             ) : (
-                              <div className="w-full h-10 rounded-xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-2.5 text-[11px] text-slate-400 dark:text-zinc-500">
-                                {field.placeholder || `Enter ${field.label?.toLowerCase() || 'value'}...`}
+                              <div className="w-full h-9 rounded-lg border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 px-3 py-2 text-[11px] text-slate-400 dark:text-zinc-500">
+                                {field.placeholder || `Enter ${field.label?.toLowerCase() || "value"}...`}
                               </div>
                             )}
                           </div>
-                        );
+                        ))}
 
-                        return (
-                          <>
-                            {configs?.filter(f => f.isActive).map(f => renderField(f))}
-                          </>
-                        );
-                      })()}
+                        {(!configs || configs.filter((f: any) => f.isActive).length === 0) && (
+                          <div className="py-10 text-center text-slate-300 dark:text-zinc-600 italic text-sm bg-slate-50 dark:bg-zinc-950 rounded-xl border-2 border-dashed border-slate-100 dark:border-zinc-800">
+                            No active fields yet
+                          </div>
+                        )}
 
-                      {(!configs || configs.filter(f => f.isActive).length === 0) && (
-                        <div className="py-12 text-center text-slate-300 dark:text-zinc-650 italic text-sm bg-white dark:bg-zinc-900 rounded-xl border-2 border-dashed border-slate-100 dark:border-zinc-800">
-                          Form is empty
-                        </div>
-                      )}
+                        <button className="w-full h-10 bg-slate-900 dark:bg-zinc-700 text-white text-sm font-bold rounded-lg hover:bg-slate-800 dark:hover:bg-zinc-600 transition-colors mt-1">
+                          Submit Message
+                        </button>
+                      </div>
 
-                      <Button className="w-full bg-slate-900 dark:bg-zinc-800 text-white dark:text-zinc-100 hover:bg-slate-800 dark:hover:bg-zinc-700 h-11 rounded-xl text-sm font-bold shadow-lg dark:shadow-none shadow-slate-200 mt-2">
-                        Submit Message
-                      </Button>
+                      <div className="flex items-start gap-2 bg-blue-50/60 dark:bg-blue-950/10 p-3 rounded-lg border border-blue-100 dark:border-blue-900/30">
+                        <Info className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400 shrink-0 mt-0.5" />
+                        <p className="text-[10px] text-blue-600 dark:text-blue-400 leading-relaxed">
+                          This preview matches the layout of the public contact form on your website.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div className="mt-6 bg-blue-50/50 dark:bg-blue-950/10 p-4 rounded-xl border border-blue-100 dark:border-blue-900/30 flex gap-3">
-                    <Info className="h-5 w-5 text-blue-500 dark:text-blue-400 shrink-0 mt-0.5" />
-                    <p className="text-[11px] text-blue-600 dark:text-blue-450 leading-relaxed font-medium">
-                      This preview matches the layout of the public contact form on your website.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </Tabs>
 
