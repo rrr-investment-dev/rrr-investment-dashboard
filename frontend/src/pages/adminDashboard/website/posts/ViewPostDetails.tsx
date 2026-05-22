@@ -98,12 +98,14 @@ const ViewPostDetails = () => {
                   <div className={`h-2 w-2 rounded-full ${isPublished ? "bg-emerald-600" : "bg-amber-600"}`} />
                </Badge>
 
-               <Button variant="outline" className="h-10 rounded-lg gap-2 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800/80 shadow-sm" asChild>
-                  <a href={post.link} target="_blank" rel="noopener noreferrer">
-                     <ExternalLink className="h-4 w-4" />
-                     Visit Original
-                  </a>
-               </Button>
+               {post.link && (
+                  <Button variant="outline" className="h-10 rounded-lg gap-2 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-800/80 shadow-sm" asChild>
+                     <a href={post.link} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="h-4 w-4" />
+                        Visit Original
+                     </a>
+                  </Button>
+               )}
             </div>
          </div>
 

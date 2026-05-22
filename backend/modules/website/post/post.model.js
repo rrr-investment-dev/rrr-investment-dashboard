@@ -25,10 +25,10 @@ const postSchema = new mongoose.Schema(
 
         link: {
             type: String,
-            required: [true, "Link is required"],
             trim: true,
             validate: {
                 validator: function (value) {
+                    if (!value) return true; // Allow optional/empty link
                     try {
                         new URL(value);
                         return true;

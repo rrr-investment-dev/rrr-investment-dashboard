@@ -20,9 +20,9 @@ export const createPost = catchAsync(async (req, res, next) => {
     ? `/${req?.file?.path.replace(/\\/g, "/")}`
     : undefined;
 
-  if (!title || !link || !creatorId) {
+  if (!title || !creatorId) {
     return next(
-      new AppErrorClass("Title, link, and creator ID are required", 400),
+      new AppErrorClass("Title and creator ID are required", 400),
     );
   }
 

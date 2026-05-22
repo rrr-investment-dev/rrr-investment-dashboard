@@ -57,19 +57,26 @@ export const postColumns = (
     {
       accessorKey: "link",
       header: "External Link",
-      cell: ({ row }) => (
-        <div className="flex justify-center">
-          <a
-            href={row.original.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-bold text-xs flex items-center gap-1.5 transition-colors group"
-          >
-            <span className="max-w-[120px] truncate underline underline-offset-4 decoration-blue-200 group-hover:decoration-blue-600 dark:decoration-blue-900/50 dark:group-hover:decoration-blue-400">View Source</span>
-            <ExternalLink className="w-3 w-3" />
-          </a>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const link = row.original.link;
+        return (
+          <div className="flex justify-center">
+            {link ? (
+              <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-bold text-xs flex items-center gap-1.5 transition-colors group"
+              >
+                <span className="max-w-[120px] truncate underline underline-offset-4 decoration-blue-200 group-hover:decoration-blue-600 dark:decoration-blue-900/50 dark:group-hover:decoration-blue-400">View Source</span>
+                <ExternalLink className="w-3 w-3" />
+              </a>
+            ) : (
+              <span className="text-slate-405 dark:text-zinc-600 text-xs font-semibold">-</span>
+            )}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "status",
