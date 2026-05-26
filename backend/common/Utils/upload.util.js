@@ -25,17 +25,12 @@ export const processUpload = async (file, folder, runBgRemoval = false) => {
       currentPath = await processBackgroundRemoval(currentPath);
     }
 
-    // 2. Upload to S3 if credentials are provided and NOT in development mode
-    const useS3 = process.env.AWS_ACCESS_KEY_ID && 
-                  process.env.AWS_SECRET_ACCESS_KEY && 
-                  process.env.AWS_S3_BUCKET_NAME && 
-                  process.env.NODE_ENV !== "development";
-
-    if (useS3) {
+    // 2. Upload to S3 if in production
+    if (process.env.NODE_ENV === "production") {
       const filename = path.basename(currentPath);
       const s3Key = `${folder}/${filename}`;
 
-      logger.info(`AWS S3 Mode: Uploading ${filename} to S3 in bucket folder ${folder}`);
+      logger.info(`Production environment: Uploading ${filename} to S3 in folder ${folder}`);
       const s3Url = await uploadToS3(currentPath, s3Key);
 
       // Clean up the local file after uploading to S3
