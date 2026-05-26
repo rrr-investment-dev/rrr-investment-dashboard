@@ -9,18 +9,7 @@ import AppErrorClass from "../../../common/Utils/AppErrorClass.js";
 import catchAsync from "../../../common/Utils/catchAsync.js";
 import mongoose from "mongoose";
 import { logActivity } from "../../../common/Utils/activityLogger.js";
-
-const deleteFileIfExists = (filePath) => {
-  if (!filePath) return;
-
-  try {
-    const normalizedPath = filePath.replace(/^\/+/, "").replace(/\\/g, "/");
-    const absolutePath = path.resolve(normalizedPath);
-    if (fs.existsSync(absolutePath)) fs.unlinkSync(absolutePath);
-  } catch (err) {
-    console.error("File delete error:", err);
-  }
-};
+import { processUpload, deleteFile } from "../../../common/Utils/upload.util.js";
 
 // API's for User
 
@@ -138,10 +127,7 @@ export const createUser = catchAsync(async (req, res, next) => {
   // Generate user ID
   const usr_id = `USR_${String(nextNumber).padStart(3, "0")}`;
 
-  let image = undefined;
-  if (req.file) {
-    image = `/${req.file.path.replace(/\\/g, "/")}`;
-  }
+  const image = await processUpload(req.file, "users");
 
   const user = await User.create({
     name,
@@ -283,9 +269,9 @@ export const updateUser = catchAsync(async (req, res, next) => {
   if (req.file) {
     const existingUser = await User.findById(id);
     if (existingUser && existingUser.image) {
-      deleteFileIfExists(existingUser.image);
+      await deleteFile(existingUser.image);
     }
-    updateData.image = `/${req.file.path.replace(/\\/g, "/")}`;
+    updateData.image = await processUpload(req.file, "users");
   }
 
   // Update user

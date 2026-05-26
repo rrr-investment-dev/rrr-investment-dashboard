@@ -2,28 +2,9 @@ import fs from "fs";
 import path from "path";
 import AppErrorClass from "../../../common/Utils/AppErrorClass.js";
 import Post from "./post.model.js";
+import { deleteFile } from "../../../common/Utils/upload.util.js";
 
 // Admin
-
-const deleteFileIfExists = (filePath) => {
-  if (!filePath) return { error: null };
-
-  try {
-    const normalizedPath = filePath.replace(/^\/+/, "").replace(/\\/g, "/");
-
-    const absolutePath = path.resolve(normalizedPath);
-
-    if (fs.existsSync(absolutePath)) {
-      fs.unlinkSync(absolutePath);
-    }
-
-    return { error: null }; // ✅ always return
-  } catch (err) {
-    return {
-      error: new AppErrorClass("File delete error", 500),
-    };
-  }
-};
 
 export const createPost = async (data) => {
   const post = await Post.create(data);
@@ -134,11 +115,7 @@ export const updatePost = async (postID, data) => {
   });
 
   if (data.image && existingPost.image && data.image !== existingPost.image) {
-    const { error } = deleteFileIfExists(existingPost.image);
-
-    if (error) {
-      return { updatedPost: null, error };
-    }
+    await deleteFile(existingPost.image);
   }
 
   const updatedPost = await Post.findOneAndUpdate({ _id: postID }, data, {
@@ -157,11 +134,7 @@ export const deletePost = async (postID) => {
   }
 
   if (post.image) {
-    const { error } = deleteFileIfExists(post.image);
-
-    if (error) {
-      return { post, error };
-    }
+    await deleteFile(post.image);
   }
 
   await Post.deleteOne({ _id: postID });

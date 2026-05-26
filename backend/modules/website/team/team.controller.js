@@ -3,19 +3,7 @@ import path from "path";
 import catchAsync from "../../../common/Utils/catchAsync.js";
 import AppErrorClass from "../../../common/Utils/AppErrorClass.js";
 import * as teamService from "./team.service.js";
-import { processBackgroundRemoval } from "../../../common/Utils/removeBackground.js";
-
-const deleteFileIfExists = (filePath) => {
-    if (!filePath) return;
-
-    try {
-        const normalizedPath = filePath.replace(/^\/+/, "").replace(/\\/g, "/");
-        const absolutePath = path.resolve(normalizedPath);
-        if (fs.existsSync(absolutePath)) fs.unlinkSync(absolutePath);
-    } catch (err) {
-        console.error("File delete error:", err);
-    }
-};
+import { processUpload, deleteFile } from "../../../common/Utils/upload.util.js";
 
 // Admin
 
@@ -34,9 +22,7 @@ export const addTeamMember = catchAsync(async (req, res, next) => {
         if (socialMedia) socialMedia = JSON.parse(socialMedia);
     } catch (err) { }
 
-    // Process background removal
-    const processedImagePath = await processBackgroundRemoval(req.file.path);
-    const imagePath = `/${processedImagePath.replace(/\\/g, "/")}`;
+    const imagePath = await processUpload(req.file, "teams", true);
 
     const member = await teamService.createTeamMemberService({
         name,
@@ -117,7 +103,7 @@ export const deleteTeamMember = catchAsync(async (req, res, next) => {
     }
 
     if (member.image) {
-        deleteFileIfExists(member.image);
+        await deleteFile(member.image);
     }
 
     await teamService.deleteTeamMemberService(id);
@@ -153,14 +139,10 @@ export const updateTeamMember = catchAsync(async (req, res, next) => {
     };
 
     if (req.file) {
-        // Process new image
-        const processedImagePath = await processBackgroundRemoval(req.file.path);
-        const imagePath = `/${processedImagePath.replace(/\\/g, "/")}`;
-
-        dataToUpdate.image = imagePath;
         if (existingMember.image) {
-            deleteFileIfExists(existingMember.image);
+            await deleteFile(existingMember.image);
         }
+        dataToUpdate.image = await processUpload(req.file, "teams", true);
     }
 
     const member = await teamService.updateTeamMemberService(id, dataToUpdate);

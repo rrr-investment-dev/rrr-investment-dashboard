@@ -1,5 +1,6 @@
 import AppErrorClass from "../../../common/Utils/AppErrorClass.js";
 import catchAsync from "../../../common/Utils/catchAsync.js";
+import { processUpload } from "../../../common/Utils/upload.util.js";
 import {
   createPost as createPostService,
   getAllPosts as getAllPostsService,
@@ -16,9 +17,7 @@ import { logActivity } from "../../../common/Utils/activityLogger.js";
 export const createPost = catchAsync(async (req, res, next) => {
   const { title, subTitle, description, link, platform } = req.body;
   const creatorId = req?.user?._id;
-  const imagePath = req?.file
-    ? `/${req?.file?.path.replace(/\\/g, "/")}`
-    : undefined;
+  const imagePath = await processUpload(req?.file, "posts");
 
   if (!title || !creatorId) {
     return next(
@@ -129,12 +128,8 @@ export const updatePost = catchAsync(async (req, res, next) => {
     ...req.body,
   };
 
-  const imagePath = req?.file
-    ? `/${req?.file?.path.replace(/\\/g, "/")}`
-    : undefined;
-
-  if (imagePath) {
-    dataToUpdate.image = imagePath;
+  if (req?.file) {
+    dataToUpdate.image = await processUpload(req.file, "posts");
   }
 
   const { updatedPost, error } = await updatePostService(id, dataToUpdate);
