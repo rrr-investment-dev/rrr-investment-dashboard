@@ -20,6 +20,7 @@ app.use(
     origin: [
       process.env.FRONTEND_URL || "http://localhost:5173",
       process.env.WEBSITE_URL || "http://localhost:3001",
+      "https://admin.rrrinvestments.in",
       "http://localhost:3001",
       "http://127.0.0.1:3001",
     ],
