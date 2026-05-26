@@ -30,7 +30,6 @@ export function LoginForm({
     mutationFn: login,
     onSuccess: (data, userDetails) => {
       const user = userDetails as string;
-      console.log(data.otp);
 
       toast.success("OTP sent successfully!");
       onOtpSent(user);

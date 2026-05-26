@@ -38,8 +38,6 @@ export function OTPForm({
     mutationFn: login,
     onSuccess: (data) => {
       toast.success("OTP resent successfully!");
-      console.log("New OTP:", data.otp);
-      toast.success("New OTP:", data.otp);
       setResendUntil(Date.now() + 60000);
     },
   });
@@ -138,7 +136,7 @@ export function OTPForm({
             </div>
           </Field>
           <Field>
-            <Button 
+            <Button
               type="submit"
               className="w-full h-11 bg-[#00338D] hover:bg-[#002a75] text-white font-medium rounded-xl shadow-[0_4px_20px_rgba(0,51,141,0.25)] hover:shadow-[0_4px_25px_rgba(0,51,141,0.4)] active:scale-[0.98] transition-all duration-300 border-0 cursor-pointer"
             >
