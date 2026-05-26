@@ -109,18 +109,20 @@ export const createUser = catchAsync(async (req, res, next) => {
     return next(new AppErrorClass("revokedPermissions must be an array", 400));
   }
 
-  // Find the highest existing user ID number
-  const existingUsersWithUsrId = await User.find({
-    usr_id: { $exists: true, $ne: null },
-  })
-    .sort({ usr_id: -1 })
-    .limit(1);
+  // Find all users with a valid numeric usr_id format (USR or USR_ followed by digits)
+  const usersWithUsrId = await User.find(
+    { usr_id: { $regex: /^USR_?\d+$/ } },
+    { usr_id: 1 }
+  );
 
   let nextNumber = 1; // Default start
-  if (existingUsersWithUsrId.length > 0) {
-    const lastUsrId = existingUsersWithUsrId[0].usr_id;
-    const lastNumber = parseInt(lastUsrId.replace("USR", ""));
-    nextNumber = lastNumber + 1;
+  if (usersWithUsrId.length > 0) {
+    const numbers = usersWithUsrId
+      .map((u) => parseInt(u.usr_id.replace(/\D/g, ""), 10))
+      .filter((num) => !isNaN(num));
+    if (numbers.length > 0) {
+      nextNumber = Math.max(...numbers) + 1;
+    }
   }
 
   // Resolve permission keys to IDs
@@ -134,7 +136,7 @@ export const createUser = catchAsync(async (req, res, next) => {
   }
 
   // Generate user ID
-  const usr_id = `USR${String(nextNumber).padStart(3, "0")}`;
+  const usr_id = `USR_${String(nextNumber).padStart(3, "0")}`;
 
   let image = undefined;
   if (req.file) {
