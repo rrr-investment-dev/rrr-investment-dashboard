@@ -20,7 +20,7 @@ export const postColumns = (
             {image ? (
               <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-slate-200 dark:border-zinc-800 shadow-sm">
                 <img
-                  src={`${BACKEND_URL}${image}`}
+                  src={image.startsWith("http") ? image : `${BACKEND_URL}${image}`}
                   alt={row.original.title}
                   className="w-full h-full object-cover"
                 />

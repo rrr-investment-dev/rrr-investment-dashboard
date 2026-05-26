@@ -226,7 +226,7 @@ const ViewPostDetails = () => {
                      <div className="aspect-[4/3] rounded-lg overflow-hidden bg-slate-50 dark:bg-zinc-950 border border-slate-100 dark:border-zinc-800 group relative">
                         {post.image ? (
                            <img
-                              src={`${BACKEND_URL}${post.image}?t=${new Date(post.updatedAt || post.createdAt).getTime()}`}
+                              src={`${post.image.startsWith("http") ? post.image : `${BACKEND_URL}${post.image}`}?t=${new Date(post.updatedAt || post.createdAt).getTime()}`}
                               alt={post.title}
                               className="w-full h-full object-cover"
                            />

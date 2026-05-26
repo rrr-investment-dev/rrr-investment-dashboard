@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         name: user.name,
         email: user.email,
         permissions: permissionKeys,
-        avatar: user.image ? `${BACKEND_URL}${user.image}` : undefined,
+        avatar: user.image ? (user.image.startsWith("http") ? user.image : `${BACKEND_URL}${user.image}`) : undefined,
       });
     } catch {
       setUser(null);

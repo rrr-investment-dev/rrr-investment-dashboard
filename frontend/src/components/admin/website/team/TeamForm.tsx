@@ -87,7 +87,7 @@ const SOCIAL_PLATFORMS = [
 /* ---------------- Component ---------------- */
 export default function TeamForm({ onSuccess, initialData }: Props) {
   const [preview, setPreview] = useState<string | null>(
-    initialData?.image ? `${BACKEND_URL}${initialData.image}` : null
+    initialData?.image ? (initialData.image.startsWith("http") ? initialData.image : `${BACKEND_URL}${initialData.image}`) : null
   );
   const [sectorInput, setSectorInput] = useState("");
   const queryClient = useQueryClient();

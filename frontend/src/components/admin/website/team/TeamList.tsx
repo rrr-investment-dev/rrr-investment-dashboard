@@ -96,7 +96,7 @@ function MemberCard({ member, onView, onEdit, onDelete, onToggleStatus, isStatus
       {/* ── Photo area ──────────────────────────────────── */}
       <div className="relative bg-muted overflow-hidden aspect-[3/4] max-h-56 flex items-end justify-center">
         <img
-          src={`${BACKEND_URL}${member.image}?t=${new Date(member.updatedAt).getTime()}`}
+          src={`${member.image.startsWith("http") ? member.image : `${BACKEND_URL}${member.image}`}?t=${new Date(member.updatedAt).getTime()}`}
           alt={member.name}
           className="h-full w-full object-contain object-bottom"
         />

@@ -205,9 +205,9 @@ const ViewUserDetails = () => {
               <div className="space-y-6">
                 <div className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-slate-200 dark:border-zinc-700/60 bg-slate-50 dark:bg-zinc-800/40 p-5">
                   <div className="relative">
-                    <Avatar className="h-28 w-28 border-2 border-white dark:border-zinc-700 shadow-sm">
-                      <AvatarImage src={userData.image ? `${BACKEND_URL}${userData.image}` : undefined} className="object-cover" />
-                      <AvatarFallback className="text-3xl bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 font-semibold">
+                     <Avatar className="h-28 w-28 border-2 border-white dark:border-zinc-700 shadow-sm">
+                       <AvatarImage src={userData.image ? (userData.image.startsWith("http") ? userData.image : `${BACKEND_URL}${userData.image}`) : undefined} className="object-cover" />
+                       <AvatarFallback className="text-3xl bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 font-semibold">
                         {getInitials(userData.name)}
                       </AvatarFallback>
                     </Avatar>

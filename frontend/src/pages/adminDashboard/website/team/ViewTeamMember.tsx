@@ -216,8 +216,8 @@ const ViewTeamMember = () => {
                         <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm">Profile Photo</h3>
                      </div>
                      {member.image && (
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300" asChild>
-                           <a href={`${BACKEND_URL}${member.image}?t=${new Date(member.updatedAt).getTime()}`} download target="_blank" rel="noopener noreferrer" title="Download Image">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 dark:text-zinc-550 hover:text-slate-600 dark:hover:text-zinc-300" asChild>
+                           <a href={`${member.image.startsWith("http") ? member.image : `${BACKEND_URL}${member.image}`}?t=${new Date(member.updatedAt).getTime()}`} download target="_blank" rel="noopener noreferrer" title="Download Image">
                               <Download className="h-4 w-4" />
                            </a>
                         </Button>
@@ -227,7 +227,7 @@ const ViewTeamMember = () => {
                      <div className="aspect-[3/4] rounded-lg overflow-hidden bg-[#f0f2f5] dark:bg-zinc-950 border border-slate-100 dark:border-zinc-850 group relative flex items-end justify-center">
                         {member.image ? (
                            <img
-                              src={`${BACKEND_URL}${member.image}?t=${new Date(member.updatedAt).getTime()}`}
+                              src={`${member.image.startsWith("http") ? member.image : `${BACKEND_URL}${member.image}`}?t=${new Date(member.updatedAt).getTime()}`}
                               alt={member.name}
                               className="w-full h-full object-contain object-bottom"
                            />

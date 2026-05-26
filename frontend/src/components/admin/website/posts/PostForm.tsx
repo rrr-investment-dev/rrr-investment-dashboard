@@ -73,7 +73,7 @@ type Props = {
 /* ---------------- Component ---------------- */
 export default function PostForm({ onSuccess, initialData }: Props) {
   const [preview, setPreview] = useState<string | null>(
-    initialData?.image ? `${BACKEND_URL}${initialData.image}` : null
+    initialData?.image ? (initialData.image.startsWith("http") ? initialData.image : `${BACKEND_URL}${initialData.image}`) : null
   );
   const queryClient = useQueryClient();
 
