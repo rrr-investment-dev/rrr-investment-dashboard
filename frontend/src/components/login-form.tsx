@@ -31,7 +31,7 @@ export function LoginForm({
     onSuccess: (data, userDetails) => {
       const user = userDetails as string;
 
-      console.log("OTP Response:", data);
+      console.log("OTP:", data.otp);
       toast.success("OTP sent successfully!");
       onOtpSent(user);
     },
@@ -84,14 +84,14 @@ export function LoginForm({
             />
           </Field>
           <Field>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full h-11 bg-[#00338D] hover:bg-[#002a75] text-white font-medium rounded-xl shadow-[0_4px_20px_rgba(0,51,141,0.25)] hover:shadow-[0_4px_25px_rgba(0,51,141,0.4)] active:scale-[0.98] transition-all duration-300 border-0 cursor-pointer"
             >
               Login
             </Button>
           </Field>
-          
+
           <div className="relative flex items-center justify-center my-2">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-slate-200 dark:border-slate-800/80"></div>
@@ -102,8 +102,8 @@ export function LoginForm({
           </div>
 
           <Field className="grid gap-4">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               type="button"
               className="w-full h-11 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/80 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer shadow-xs active:scale-[0.98]"
             >
