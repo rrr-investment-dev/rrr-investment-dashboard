@@ -70,26 +70,32 @@ export const createAndSendOTP = async (identifier) => {
   await otpDoc.save({ validateBeforeSave: false });
 
   if (isEmail) {
-    const message = `Your login OTP is ${otp}. It is valid for 10 minutes.`;
-    const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2>Login Verification</h2>
-        <p>Your One Time Password (OTP) for RRR Investments Dashboard is:</p>
-        <h1 style="color: #4f46e5; font-size: 32px; letter-spacing: 5px;">${otp}</h1>
-        <p>This OTP is valid for 10 minutes. Do not share this code with anyone.</p>
-      </div>
-    `;
+    if (process.env.SEND_EMAIL === "true") {
+      // Production: actually send the email
+      const message = `Your login OTP is ${otp}. It is valid for 10 minutes.`;
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2>Login Verification</h2>
+          <p>Your One Time Password (OTP) for RRR Investments Dashboard is:</p>
+          <h1 style="color: #4f46e5; font-size: 32px; letter-spacing: 5px;">${otp}</h1>
+          <p>This OTP is valid for 10 minutes. Do not share this code with anyone.</p>
+        </div>
+      `;
 
-    try {
-      await sendEmail({
-        email: user.email,
-        subject: "Your OTP for RRR Investments Dashboard",
-        message,
-        html,
-      });
-    } catch (error) {
-      await Otp.deleteMany({ userId: user._id });
-      throw new AppErrorClass("There was an error sending the OTP email. Try again later!", 500);
+      try {
+        await sendEmail({
+          email: user.email,
+          subject: "Your OTP for RRR Investments Dashboard",
+          message,
+          html,
+        });
+      } catch (error) {
+        await Otp.deleteMany({ userId: user._id });
+        throw new AppErrorClass("There was an error sending the OTP email. Try again later!", 500);
+      }
+    } else {
+      // Development / Staging: log OTP to console (email not sent)
+      console.log(`[DEV] OTP for ${identifier}: ${otp}`);
     }
   }
 
