@@ -37,8 +37,16 @@ export function OTPForm({
   const resendOtpMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
-      console.log("OTP:", data.otp);
       toast.success("OTP resent successfully!");
+
+      // Dev/Staging: Backend returns OTP when SEND_EMAIL=false
+      if (data.otp) {
+        toast.info(`OTP: ${data.otp}`, {
+          duration: 30000,
+          description: "This is only visible in dev/staging mode.",
+        });
+      }
+
       setResendUntil(Date.now() + 60000);
     },
   });

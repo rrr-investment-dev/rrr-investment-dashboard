@@ -31,8 +31,16 @@ export function LoginForm({
     onSuccess: (data, userDetails) => {
       const user = userDetails as string;
 
-      console.log("OTP:", data.otp);
       toast.success("OTP sent successfully!");
+
+      // Dev/Staging: Backend returns OTP when SEND_EMAIL=false
+      if (data.otp) {
+        toast.info(`OTP: ${data.otp}`, {
+          duration: 30000,
+          description: "This is only visible in dev/staging mode.",
+        });
+      }
+
       onOtpSent(user);
     },
 

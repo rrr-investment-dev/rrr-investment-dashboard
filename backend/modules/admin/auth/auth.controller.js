@@ -7,10 +7,13 @@ export const requestOTP = catchAsync(async (req, res, next) => {
 
   const { otp } = await authService.createAndSendOTP(identifier);
 
+  const isEmailMode = process.env.SEND_EMAIL === "true";
+
   res.status(200).json({
     status: "success",
     message: "OTP sent successfully",
-    otp,
+    // Only expose OTP in response on dev/staging (when email is not sent)
+    ...(!isEmailMode && { otp }),
   });
 });
 
