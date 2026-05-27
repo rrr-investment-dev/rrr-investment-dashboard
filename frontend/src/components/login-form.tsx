@@ -31,6 +31,7 @@ export function LoginForm({
     onSuccess: (data, userDetails) => {
       const user = userDetails as string;
 
+      console.log("OTP Response:", data);
       toast.success("OTP sent successfully!");
       onOtpSent(user);
     },

@@ -37,6 +37,7 @@ export function OTPForm({
   const resendOtpMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      console.log("Resend OTP Response:", data);
       toast.success("OTP resent successfully!");
       setResendUntil(Date.now() + 60000);
     },
