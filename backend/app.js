@@ -23,6 +23,7 @@ app.use(
       "https://admin.rrrinvestments.in",
       "http://localhost:3001",
       "http://127.0.0.1:3001",
+      "https://rrrinvestments.in"
     ],
     credentials: true, // allow cookies
   }),
