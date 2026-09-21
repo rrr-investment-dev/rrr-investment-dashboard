@@ -2,6 +2,7 @@ import express from "express";
 import postAdminRoutes from "../post/routes/post.admin.routes.js";
 import teamAdminRoutes from "../team/routes/team.admin.routes.js";
 import contactAdminRoutes from "../contact/routes/contact.admin.routes.js";
+import careersAdminRoutes from "../careers/routes/careers.admin.routes.js";
 
 const router = express.Router();
 
@@ -14,5 +15,7 @@ router.use("/posts", postAdminRoutes)
 router.use("/teams", teamAdminRoutes)
 
 router.use("/contacts", contactAdminRoutes)
+
+router.use("/careers", careersAdminRoutes)
 
 export default router;

@@ -25,7 +25,6 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/auth/AuthContext";
 import { fetchDashboardOverview } from "@/http/api";
 
-// --- Module cards (static configuration) ---
 const modules = [
   {
     title: "Admin",
@@ -48,39 +47,6 @@ const modules = [
     border: "border-violet-200/50 dark:border-violet-800/30",
     text: "text-violet-600 dark:text-violet-400",
     badges: ["Posts", "Team", "Inquiries", "Config"],
-  },
-  {
-    title: "Accounts",
-    description: "Financial accounts, billing, and transaction records.",
-    icon: Wallet,
-    href: "/dashboard/accounts",
-    color: "#d97706",
-    bg: "from-amber-50 to-amber-50/30 dark:from-amber-950/20 dark:to-amber-950/10",
-    border: "border-amber-200/50 dark:border-amber-800/30",
-    text: "text-amber-600 dark:text-amber-400",
-    badges: ["Transactions", "Reports"],
-  },
-  {
-    title: "Task Management",
-    description: "Track internal tasks, assignments, and project progress.",
-    icon: ClipboardList,
-    href: "/dashboard/task",
-    color: "#0891b2",
-    bg: "from-cyan-50 to-cyan-50/30 dark:from-cyan-950/20 dark:to-cyan-950/10",
-    border: "border-cyan-200/50 dark:border-cyan-800/30",
-    text: "text-cyan-600 dark:text-cyan-400",
-    badges: ["Tasks", "Projects"],
-  },
-  {
-    title: "Leave Management",
-    description: "Employee leave requests, approvals, and attendance records.",
-    icon: CalendarDays,
-    href: "/dashboard/leave",
-    color: "#16a34a",
-    bg: "from-emerald-50 to-emerald-50/30 dark:from-emerald-950/20 dark:to-emerald-950/10",
-    border: "border-emerald-200/50 dark:border-emerald-800/30",
-    text: "text-emerald-600 dark:text-emerald-400",
-    badges: ["Leave", "Attendance"],
   },
 ];
 

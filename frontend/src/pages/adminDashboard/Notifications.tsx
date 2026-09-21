@@ -35,62 +35,7 @@ interface NotificationItem {
   linkText?: string;
 }
 
-const INITIAL_NOTIFICATIONS: NotificationItem[] = [
-  {
-    id: "notif-1",
-    title: "New Website Inquiry",
-    detail: "Received a new inquiry from John Doe regarding 'Portfolio Management Services'.",
-    time: "5 mins ago",
-    category: "inquiry",
-    isRead: false,
-    link: "/dashboard/website/contact/inquiries",
-    linkText: "View Inquiry",
-  },
-  {
-    id: "notif-2",
-    title: "New User Registered",
-    detail: "User 'meet.sudra77@gmail.com' successfully registered in the system.",
-    time: "42 mins ago",
-    category: "security",
-    isRead: false,
-    link: "/dashboard/admin/userMgt/user",
-    linkText: "Manage Users",
-  },
-  {
-    id: "notif-3",
-    title: "System Update Complete",
-    detail: "Dashboard backend successfully updated to Version 1.2.4 without downtime.",
-    time: "2 hours ago",
-    category: "system",
-    isRead: true,
-  },
-  {
-    id: "notif-4",
-    title: "Failed Login Alert",
-    detail: "Multiple failed login attempts detected from IP 192.168.1.120. Account locked temporarily.",
-    time: "5 hours ago",
-    category: "security",
-    isRead: false,
-  },
-  {
-    id: "notif-5",
-    title: "Database Backup Success",
-    detail: "Automatic nightly backup of transaction logs and configurations completed successfully.",
-    time: "14 hours ago",
-    category: "system",
-    isRead: true,
-  },
-  {
-    id: "notif-6",
-    title: "Inquiry Feedbacks Required",
-    detail: "Website feedback inquiry form received positive response from client 'Alice Smith'.",
-    time: "1 day ago",
-    category: "inquiry",
-    isRead: true,
-    link: "/dashboard/website/contact/inquiries",
-    linkText: "Check inquiries",
-  },
-];
+const INITIAL_NOTIFICATIONS: NotificationItem[] = [];
 
 const Notifications = () => {
   const navigate = useNavigate();
@@ -230,7 +175,7 @@ const Notifications = () => {
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          {notifications.length > 0 ? (
+          {notifications.length > 0 && (
             <>
               <Button
                 variant="outline"
@@ -252,16 +197,6 @@ const Notifications = () => {
                 Clear all
               </Button>
             </>
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleResetData}
-              className="rounded-xl border-slate-200 dark:border-zinc-800 text-xs font-bold text-[#00338D] dark:text-[#4d7cc7] hover:bg-slate-50 dark:hover:bg-zinc-800 cursor-pointer transition-colors"
-            >
-              <RefreshCw className="w-3.5 h-3.5 mr-1" />
-              Reset dummy data
-            </Button>
           )}
         </div>
       </div>
@@ -327,16 +262,7 @@ const Notifications = () => {
                           No notifications found in {activeTab === "all" ? "this vault" : `"${activeTab}" tab`}.
                         </p>
                       </div>
-                      {notifications.length === 0 && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={handleResetData}
-                          className="mt-2 rounded-xl border-slate-200 dark:border-zinc-800 text-xs font-bold text-[#00338D] dark:text-[#4d7cc7] hover:bg-slate-50 dark:hover:bg-zinc-800 cursor-pointer"
-                        >
-                          Restore defaults
-                        </Button>
-                      )}
+
                     </motion.div>
                   ) : (
                     filteredNotifications.map((notif) => {

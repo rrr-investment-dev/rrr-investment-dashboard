@@ -28,6 +28,12 @@ import InquiryMaster from "@/pages/adminDashboard/website/contact/InquiryMaster"
 import ViewInquiryDetails from "@/pages/adminDashboard/website/contact/ViewInquiryDetails";
 import WebsiteOverview from "@/pages/adminDashboard/website/WebsiteOverview";
 import PermissionProtectedRoute from "@/auth/PermissionProtectedRoute";
+import CareersMaster from "@/pages/adminDashboard/website/careers/CareersMaster";
+import JobOpeningsPage from "@/pages/adminDashboard/website/careers/JobOpeningsPage";
+import JobOpeningFormPage from "@/pages/adminDashboard/website/careers/JobOpeningFormPage";
+import JobOpeningDetailPage from "@/pages/adminDashboard/website/careers/JobOpeningDetailPage";
+import ApplicationsListPage from "@/pages/adminDashboard/website/careers/ApplicationsListPage";
+import ApplicationDetailPage from "@/pages/adminDashboard/website/careers/ApplicationDetailPage";
 // import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 export const AppRouter = createBrowserRouter([
@@ -206,6 +212,78 @@ export const AppRouter = createBrowserRouter([
                   </PermissionProtectedRoute>
                 ),
                 handle: { breadcrumb: "Edit Member", permissionKey: "website.team" },
+              },
+            ],
+          },
+          {
+            path: "careers",
+            handle: { breadcrumb: "Careers" },
+            children: [
+              {
+                path: "jobs",
+                handle: { breadcrumb: "Job Openings" },
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <PermissionProtectedRoute permission="website.careers.job.read">
+                        <JobOpeningsPage />
+                      </PermissionProtectedRoute>
+                    ),
+                    handle: { breadcrumb: "All Openings", permissionKey: "website.careers.job" },
+                  },
+                  {
+                    path: "create",
+                    element: (
+                      <PermissionProtectedRoute permission="website.careers.job.create">
+                        <JobOpeningFormPage />
+                      </PermissionProtectedRoute>
+                    ),
+                    handle: { breadcrumb: "Create Job", permissionKey: "website.careers.job" },
+                  },
+                  {
+                    path: "edit/:careerId",
+                    element: (
+                      <PermissionProtectedRoute permission="website.careers.job.update">
+                        <JobOpeningFormPage />
+                      </PermissionProtectedRoute>
+                    ),
+                    handle: { breadcrumb: "Edit Job", permissionKey: "website.careers.job" },
+                  },
+                  {
+                    path: ":careerId",
+                    element: (
+                      <PermissionProtectedRoute permission="website.careers.job.read">
+                        <JobOpeningDetailPage />
+                      </PermissionProtectedRoute>
+                    ),
+                    handle: { breadcrumb: "Job Details", permissionKey: "website.careers.job" },
+                  },
+                ],
+              },
+              {
+                path: "applications",
+                handle: { breadcrumb: "Applications" },
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <PermissionProtectedRoute permission="website.careers.application.read">
+                        <ApplicationsListPage />
+                      </PermissionProtectedRoute>
+                    ),
+                    handle: { breadcrumb: "All Applications", permissionKey: "website.careers.application" },
+                  },
+                  {
+                    path: ":applicationId",
+                    element: (
+                      <PermissionProtectedRoute permission="website.careers.application.read">
+                        <ApplicationDetailPage />
+                      </PermissionProtectedRoute>
+                    ),
+                    handle: { breadcrumb: "Application Details", permissionKey: "website.careers.application" },
+                  },
+                ],
               },
             ],
           },

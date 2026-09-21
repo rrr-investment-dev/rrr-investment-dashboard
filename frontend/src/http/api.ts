@@ -536,3 +536,100 @@ export const fetchAdminOverview = async (): Promise<AdminOverviewResponse> => {
   return res.data.data;
 };
 
+// --- Website / Careers & Applications Types ---
+
+export type CareerApi = {
+  _id: string;
+  title: string;
+  department: string;
+  location: string;
+  jobType: "Full-time" | "Part-time" | "Contract" | "Internship";
+  experience: string;
+  education?: string;
+  description: string;
+  requirements: string[];
+  benefits: string[];
+  isActive: boolean;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type JobApplicationApi = {
+  _id: string;
+  careerId: {
+    _id: string;
+    title: string;
+    department: string;
+    location: string;
+  } | string;
+  name: string;
+  email: string;
+  phone: string;
+  resume: string;
+  coverLetter?: string;
+  status: "pending" | "reviewed" | "shortlisted" | "rejected";
+  createdAt: string;
+  updatedAt: string;
+};
+
+// --- Website / Careers APIs ---
+
+export const fetchCareers = async (): Promise<CareerApi[]> => {
+  const res = await api.get("/admin/website/careers");
+  return res.data.data;
+};
+
+export const fetchCareerById = async (id: string): Promise<CareerApi> => {
+  const res = await api.get(`/admin/website/careers/${id}`);
+  return res.data.data;
+};
+
+export const createCareer = async (data: any): Promise<any> => {
+  const res = await api.post("/admin/website/careers", data);
+  return res.data;
+};
+
+export const updateCareer = async (id: string, data: any): Promise<any> => {
+  const res = await api.patch(`/admin/website/careers/${id}`, data);
+  return res.data;
+};
+
+export const deleteCareer = async (id: string): Promise<any> => {
+  const res = await api.delete(`/admin/website/careers/${id}`);
+  return res.data;
+};
+
+export const toggleCareerStatus = async (id: string, isActive: boolean): Promise<any> => {
+  const res = await api.patch(`/admin/website/careers/${id}/toggle-status`, { isActive });
+  return res.data;
+};
+
+// --- Website / Job Applications APIs ---
+
+export const fetchApplications = async (params?: { careerId?: string; status?: string }): Promise<JobApplicationApi[]> => {
+  const res = await api.get("/admin/website/careers/applications", { params });
+  return res.data.data;
+};
+
+export const fetchApplicationsForJob = async (careerId: string): Promise<JobApplicationApi[]> => {
+  const res = await api.get(`/admin/website/careers/${careerId}/applications`);
+  return res.data.data;
+};
+
+export const fetchApplicationById = async (id: string): Promise<JobApplicationApi> => {
+  const res = await api.get(`/admin/website/careers/applications/${id}`);
+  return res.data.data;
+};
+
+export const updateApplicationStatus = async (id: string, status: string): Promise<any> => {
+  const res = await api.patch(`/admin/website/careers/applications/${id}/status`, { status });
+  return res.data;
+};
+
+export const deleteApplication = async (id: string): Promise<any> => {
+  const res = await api.delete(`/admin/website/careers/applications/${id}`);
+  return res.data;
+};
+
+

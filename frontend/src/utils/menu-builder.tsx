@@ -61,7 +61,8 @@ export const buildDynamicSidebar = (
       p.path !== null &&
       p.menu === null &&
       p.subMenu === null &&
-      (p.action === "access" || p.action === "read")
+      (p.action === "access" || p.action === "read") &&
+      !["accounts", "task", "leave", "taskManagement", "leaveManagement"].includes(p.module)
   );
 
   modules.forEach((modPerm) => {
