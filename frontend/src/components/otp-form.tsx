@@ -21,6 +21,7 @@ import { login, verifyOTP } from "@/http/api";
 import { toast } from "sonner";
 import type { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/auth/AuthContext";
 
 type OTPFormProps = React.ComponentProps<"div"> & {};
 
@@ -30,6 +31,7 @@ export function OTPForm({
   ...props
 }: OTPFormProps & { user?: string | null }) {
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
   const [otp, setOtp] = useState("");
   // eslint-disable-next-line react-hooks/purity
   const [resendUntil, setResendUntil] = useState(Date.now() + 60000);
@@ -62,9 +64,14 @@ export function OTPForm({
 
   const mutation = useMutation({
     mutationFn: verifyOTP,
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Login successful!");
       setResendUntil(Date.now());
+      try {
+        await refreshUser();
+      } catch (e) {
+        console.error("Failed to load user profile:", e);
+      }
       navigate("/dashboard");
     },
 

@@ -1,6 +1,7 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import os from "os";
 import { nanoid } from "nanoid";
 import AppErrorClass from "../Utils/AppErrorClass.js";
 
@@ -32,7 +33,11 @@ export const createUploader = ({
     prefix = "file",
     type = "image",
 }) => {
-    const uploadPath = path.join("uploads", folder);
+    const isProduction = process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL);
+    const uploadPath = isProduction
+        ? path.join(os.tmpdir(), "uploads", folder)
+        : path.join("uploads", folder);
+
     ensureDir(uploadPath);
 
     const storage = multer.diskStorage({

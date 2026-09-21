@@ -13,6 +13,15 @@ export const api = axios.create({
   },
 });
 
+// Attach Authorization Bearer token to all outgoing requests
+api.interceptors.request.use((config) => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 let isRefreshing = false;
 
 export type RoleApi = {
@@ -148,11 +157,12 @@ const processQueue = (error?: unknown) => {
   failedQueue = [];
 };
 
-// 🔑 REFRESH CALL (raw axios + skip flag)
-const refreshAccessToken = () => {
-  return axios.post(
+// 🔑 REFRESH CALL (raw axios + skip flag + fallback token in payload)
+const refreshAccessToken = async () => {
+  const storedRefreshToken = typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null;
+  const response = await axios.post(
     `${API_BASE_URL}/auth/refresh-token`,
-    {},
+    { refreshToken: storedRefreshToken },
     {
       withCredentials: true,
       headers: {
@@ -160,6 +170,10 @@ const refreshAccessToken = () => {
       },
     },
   );
+  if (response.data?.accessToken && typeof window !== "undefined") {
+    localStorage.setItem("accessToken", response.data.accessToken);
+  }
+  return response;
 };
 
 api.interceptors.response.use(
@@ -209,7 +223,10 @@ api.interceptors.response.use(
       return api(originalRequest); // retry original request
     } catch (refreshError) {
       processQueue(refreshError);
-      // ❌ DO NOT redirect here
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+      }
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;
@@ -224,12 +241,26 @@ export const login = async (identifier: string) => {
 
 export const verifyOTP = async (otp: string) => {
   const response = await api.post("/auth/verify-otp", { otp });
+  if (response.data?.accessToken && typeof window !== "undefined") {
+    localStorage.setItem("accessToken", response.data.accessToken);
+  }
+  if (response.data?.refreshToken && typeof window !== "undefined") {
+    localStorage.setItem("refreshToken", response.data.refreshToken);
+  }
   return response.data;
 };
 
 export const logout = async () => {
-  const response = await api.post("/auth/logout");
-  return response.data;
+  const storedRefreshToken = typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null;
+  try {
+    const response = await api.post("/auth/logout", { refreshToken: storedRefreshToken });
+    return response.data;
+  } finally {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+    }
+  }
 };
 
 export const fetchMe = async () => {

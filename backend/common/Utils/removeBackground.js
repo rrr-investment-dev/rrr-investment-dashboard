@@ -1,15 +1,17 @@
-import { removeBackground } from '@imgly/background-removal-node';
 import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
 
 /**
  * Removes background from an image and saves it as a PNG file.
- * Returns the new path or null if it fails.
+ * Dynamically imports background-removal-node on demand with fallback to original image.
+ * Returns the new path or inputPath if it fails.
  */
 export const processBackgroundRemoval = async (inputPath) => {
     try {
-        // Read file using absolute path just to be safe
+        const { removeBackground } = await import('@imgly/background-removal-node');
+
+        // Read file using absolute path
         const absolutePath = path.resolve(inputPath);
         const fileUrl = pathToFileURL(absolutePath).href;
 
@@ -32,11 +34,10 @@ export const processBackgroundRemoval = async (inputPath) => {
         }
 
         // Return the relative path to be saved in DB
-        // Assuming inputPath is like "uploads/teams/..."
         const originalRelativeDir = path.dirname(inputPath);
         return path.posix.join(originalRelativeDir.replace(/\\/g, '/'), newFileName);
     } catch (error) {
-        console.error("Background removal failed:", error);
+        console.error("Background removal skipped/failed:", error?.message || error);
         return inputPath; // Fallback to original image if it fails
     }
 };

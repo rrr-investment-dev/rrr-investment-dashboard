@@ -2,6 +2,20 @@ import * as authService from "./auth.service.js";
 import AppErrorClass from "../../../common/Utils/AppErrorClass.js";
 import catchAsync from "../../../common/Utils/catchAsync.js";
 
+const getCookieOptions = (req) => {
+  const isSecure =
+    process.env.NODE_ENV === "production" ||
+    Boolean(process.env.VERCEL) ||
+    req.secure ||
+    req.headers["x-forwarded-proto"] === "https";
+
+  return {
+    httpOnly: true,
+    secure: isSecure,
+    sameSite: isSecure ? "none" : "lax",
+  };
+};
+
 export const requestOTP = catchAsync(async (req, res, next) => {
   const { identifier } = req.body;
 
@@ -20,27 +34,21 @@ export const requestOTP = catchAsync(async (req, res, next) => {
 export const verifyOTP = catchAsync(async (req, res, next) => {
   const { otp } = req.body;
 
-  const { user, accessToken, refreshToken, permissionKeys } = await authService.verifyOTPAndLogin(otp);
+  const { user, accessToken, refreshToken, permissionKeys } =
+    await authService.verifyOTPAndLogin(otp);
 
-  const isProduction = process.env.NODE_ENV === "production";
-  const cookieOptions = {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-  };
+  const cookieOptions = getCookieOptions(req);
+  const accessDays = parseInt(process.env.JWT_ACCESS_COOKIE_EXPIRES_IN) || 1;
+  const refreshDays = parseInt(process.env.JWT_REFRESH_COOKIE_EXPIRES_IN) || 30;
 
   res.cookie("accessjwtoken", accessToken, {
     ...cookieOptions,
-    expires: new Date(
-      Date.now() + process.env.JWT_ACCESS_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
+    expires: new Date(Date.now() + accessDays * 24 * 60 * 60 * 1000),
   });
 
   res.cookie("refreshjwtoken", refreshToken, {
     ...cookieOptions,
-    expires: new Date(
-      Date.now() + process.env.JWT_REFRESH_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
+    expires: new Date(Date.now() + refreshDays * 24 * 60 * 60 * 1000),
   });
 
   res.status(200).json({
@@ -61,18 +69,18 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
 });
 
 export const refreshToken = catchAsync(async (req, res, next) => {
-  const incomingRefreshToken = req.cookies?.refreshjwtoken;
+  const incomingRefreshToken =
+    req.cookies?.refreshjwtoken || req.body?.refreshToken;
 
-  const { newAccessToken } = await authService.refreshAccessToken(incomingRefreshToken);
+  const { newAccessToken } =
+    await authService.refreshAccessToken(incomingRefreshToken);
 
-  const isProduction = process.env.NODE_ENV === "production";
+  const cookieOptions = getCookieOptions(req);
+  const accessDays = parseInt(process.env.JWT_ACCESS_COOKIE_EXPIRES_IN) || 1;
+
   res.cookie("accessjwtoken", newAccessToken, {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-    expires: new Date(
-      Date.now() + process.env.JWT_ACCESS_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
+    ...cookieOptions,
+    expires: new Date(Date.now() + accessDays * 24 * 60 * 60 * 1000),
   });
 
   res.status(200).json({
@@ -83,16 +91,13 @@ export const refreshToken = catchAsync(async (req, res, next) => {
 });
 
 export const logout = catchAsync(async (req, res, next) => {
-  const refreshToken = req.cookies?.refreshjwtoken;
+  const refreshToken = req.cookies?.refreshjwtoken || req.body?.refreshToken;
 
-  await authService.logoutUser(refreshToken);
+  if (refreshToken) {
+    await authService.logoutUser(refreshToken);
+  }
 
-  const isProduction = process.env.NODE_ENV === "production";
-  const option = {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
-  };
+  const option = getCookieOptions(req);
 
   res.clearCookie("accessjwtoken", option);
   res.clearCookie("refreshjwtoken", option);
