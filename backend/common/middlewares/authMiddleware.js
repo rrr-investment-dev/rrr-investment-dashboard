@@ -19,10 +19,12 @@ export const protect = catchAsync(async (req, res, next) => {
     return next(new AppError("You are not logged in!", 401));
   }
 
-  const decodedAccessToken = jwt.verify(
-    accessToken,
-    process.env.JWT_ACCESS_SECRET
-  );
+  const accessSecret =
+    process.env.JWT_ACCESS_SECRET ||
+    process.env.JWT_SECRET ||
+    "default_jwt_secret_key_rrr";
+
+  const decodedAccessToken = jwt.verify(accessToken, accessSecret);
 
   const currentUser = await User.findById(decodedAccessToken.id).populate("role");
   if (!currentUser) {

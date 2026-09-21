@@ -3,24 +3,27 @@ import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true },
-    designation: { type: String, required: true, trim: true },
-    mobile: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    role: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "UserRoleTypeMaster",
-      required: true,
-    },
+    mobile: { type: String, required: true, unique: true },
+    designation: { type: String, required: true },
+    role: { type: mongoose.Schema.Types.ObjectId, ref: "RoleType" },
     isActive: { type: Boolean, default: true },
-    image: { type: String, trim: true },
-    usr_id: {
-      type: String,
-      unique: true,
-    },
+    usr_id: { type: String, unique: true, index: true },
+    image: { type: String },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+  }
 );
+
+userSchema.pre("save", async function (next) {
+  if (this.isNew && !this.usr_id) {
+    const count = await mongoose.model("User").countDocuments();
+    this.usr_id = `USR-${(count + 1).toString().padStart(4, "0")}`;
+  }
+  next();
+});
 
 userSchema.methods.generateAccessToken = function () {
   const payload = {
@@ -28,14 +31,26 @@ userSchema.methods.generateAccessToken = function () {
     name: this.name,
     designation: this.designation,
   };
-  return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-    expiresIn: process.env.JWT_ACCESS_EXPIRES_IN,
+  const accessSecret =
+    process.env.JWT_ACCESS_SECRET ||
+    process.env.JWT_SECRET ||
+    "default_jwt_secret_key_rrr";
+  const expiresIn = process.env.JWT_ACCESS_EXPIRES_IN || "15m";
+
+  return jwt.sign(payload, accessSecret, {
+    expiresIn,
   });
 };
 
 userSchema.methods.generateRefreshToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
+  const refreshSecret =
+    process.env.JWT_REFRESH_SECRET ||
+    process.env.JWT_SECRET ||
+    "default_jwt_secret_key_rrr";
+  const expiresIn = process.env.JWT_REFRESH_EXPIRES_IN || "30d";
+
+  return jwt.sign({ id: this._id }, refreshSecret, {
+    expiresIn,
   });
 };
 

@@ -60,7 +60,16 @@ const corsOptions = {
     "Accept",
     "Authorization",
     "Cookie",
+    "x-loading-bar",
+    "x-skip-auth-refresh",
+    "X-CSRF-Token",
+    "Accept-Version",
+    "Content-Length",
+    "Content-MD5",
+    "Date",
+    "X-Api-Version",
   ],
+  exposedHeaders: ["Set-Cookie"],
 };
 
 // 1. CORS middleware (handles regular and preflight OPTIONS requests)
