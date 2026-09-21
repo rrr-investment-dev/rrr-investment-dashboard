@@ -11,6 +11,12 @@ const roleTypeSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const RoleType = mongoose.model("UserRoleTypeMaster", roleTypeSchema);
+const RoleType =
+  mongoose.models.UserRoleTypeMaster ||
+  mongoose.model("UserRoleTypeMaster", roleTypeSchema);
+
+if (!mongoose.models.RoleType) {
+  mongoose.model("RoleType", roleTypeSchema);
+}
 
 export default RoleType;

@@ -1,6 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import "./models/registerModels.js";
 import { connectDB } from "./config/db.js";
 import apiRoutes from "./routes/index.js";
 import AppErrorClass from "./common/Utils/AppErrorClass.js";

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import "../roleType/roleType.model.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -7,7 +8,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     mobile: { type: String, required: true, unique: true },
     designation: { type: String, required: true },
-    role: { type: mongoose.Schema.Types.ObjectId, ref: "RoleType" },
+    role: { type: mongoose.Schema.Types.ObjectId, ref: "UserRoleTypeMaster" },
     isActive: { type: Boolean, default: true },
     usr_id: { type: String, unique: true, index: true },
     image: { type: String },
@@ -54,6 +55,7 @@ userSchema.methods.generateRefreshToken = function () {
   });
 };
 
-const User = mongoose.model("User", userSchema);
+const User =
+  mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;
