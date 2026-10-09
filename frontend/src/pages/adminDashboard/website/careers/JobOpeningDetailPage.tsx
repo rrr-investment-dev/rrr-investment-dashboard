@@ -151,17 +151,17 @@ export default function JobOpeningDetailPage() {
           </Card>
 
           {/* Requirements & Benefits list */}
-          <Card className="bg-card text-card-foreground border-slate-200/60 dark:border-zinc-800 shadow-sm rounded-xl overflow-hidden">
+          <Card className="bg-card text-card-foreground border-slate-200/60 dark:border-zinc-800 shadow-sm rounded-xl overflow-hidden min-w-0">
             <CardHeader className="py-5 px-6 border-b border-slate-100 dark:border-zinc-800">
               <CardTitle className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide">
                 Requirements
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 space-y-3">
+            <CardContent className="p-6 space-y-3 min-w-0">
               {job.requirements?.length > 0 ? (
                 <ul className="list-disc list-inside text-xs text-slate-600 dark:text-zinc-400 space-y-1.5 leading-relaxed font-semibold">
                   {job.requirements.map((req, idx) => (
-                    <li key={idx}>{req}</li>
+                    <li key={idx} className="break-words [overflow-wrap:anywhere]">{req}</li>
                   ))}
                 </ul>
               ) : (
@@ -169,6 +169,23 @@ export default function JobOpeningDetailPage() {
               )}
             </CardContent>
           </Card>
+
+          {job.benefits?.length > 0 && (
+            <Card className="bg-card text-card-foreground border-slate-200/60 dark:border-zinc-800 shadow-sm rounded-xl overflow-hidden min-w-0">
+              <CardHeader className="py-5 px-6 border-b border-slate-100 dark:border-zinc-800">
+                <CardTitle className="text-sm font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wide">
+                  Perks & Benefits
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-3 min-w-0">
+                <ul className="list-disc list-inside text-xs text-slate-600 dark:text-zinc-400 space-y-1.5 leading-relaxed font-semibold">
+                  {job.benefits.map((benefit, idx) => (
+                    <li key={idx} className="break-words [overflow-wrap:anywhere]">{benefit}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* 👥 Right Side: Description & Applications Table */}

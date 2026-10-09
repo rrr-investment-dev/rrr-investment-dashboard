@@ -420,18 +420,18 @@ export default function JobOpeningFormPage() {
             {/* Requirements & Benefits Tag Inputs */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Requirements */}
-              <Card className="bg-card text-card-foreground border-slate-200/60 dark:border-zinc-800 shadow-sm rounded-xl">
+              <Card className="bg-card text-card-foreground border-slate-200/60 dark:border-zinc-800 shadow-sm rounded-xl min-w-0 overflow-hidden">
                 <CardHeader className="border-b border-slate-100 dark:border-zinc-800 py-4 px-6">
                   <h3 className="text-sm font-bold text-slate-900 dark:text-slate-200 flex items-center gap-2">
                     <FileText className="h-4.5 w-4.5 text-blue-600 dark:text-blue-400" />
                     Job Requirements
                   </h3>
                 </CardHeader>
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-6 space-y-4 min-w-0">
                   <div className="flex gap-2">
-                    <div className="flex-1 flex items-center bg-slate-50/50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-lg px-3 focus-within:bg-white dark:focus-within:bg-zinc-900 focus-within:border-[#00338D]/50 focus-within:ring-1 focus-within:ring-[#00338D]/25 dark:focus-within:border-[#4d7cc7]/50 dark:focus-within:ring-[#4d7cc7]/25 transition-all">
+                    <div className="flex-1 flex items-center bg-slate-50/50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-lg px-3 focus-within:bg-white dark:focus-within:bg-zinc-900 focus-within:border-[#00338D]/50 focus-within:ring-1 focus-within:ring-[#00338D]/25 dark:focus-within:border-[#4d7cc7]/50 dark:focus-within:ring-[#4d7cc7]/25 transition-all min-w-0">
                       <input
-                        placeholder="Add required skill (e.g. React.js)"
+                        placeholder="Add required skill or requirement (e.g. React.js)"
                         value={reqInput}
                         onChange={(e) => setReqInput(e.target.value)}
                         onKeyDown={(e) => {
@@ -453,26 +453,27 @@ export default function JobOpeningFormPage() {
                     </Button>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 pt-2">
+                  <div className="flex flex-wrap gap-2 pt-2 min-w-0 w-full">
                     {watchRequirements.length === 0 ? (
                       <span className="text-xs text-slate-400 dark:text-zinc-500 italic">
                         No requirements added yet.
                       </span>
                     ) : (
                       watchRequirements.map((req, index) => (
-                        <Badge
+                        <div
                           key={index}
-                          className="bg-slate-100 hover:bg-slate-200/80 dark:bg-zinc-800 dark:hover:bg-zinc-700/80 text-slate-700 dark:text-zinc-300 font-semibold px-2 py-0.5 rounded-lg flex items-center gap-1.5 border border-slate-200 dark:border-zinc-750"
+                          className="bg-slate-100 hover:bg-slate-200/70 dark:bg-zinc-800 dark:hover:bg-zinc-750 text-slate-700 dark:text-zinc-300 font-medium px-2.5 py-1.5 rounded-lg flex items-start gap-1.5 border border-slate-200 dark:border-zinc-700 max-w-full text-xs leading-relaxed transition-colors shadow-2xs"
                         >
-                          <span>{req}</span>
+                          <span className="flex-1 text-left break-words [overflow-wrap:anywhere]">{req}</span>
                           <button
                             type="button"
                             onClick={() => removeRequirement(req)}
-                            className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
+                            className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded p-0.5 cursor-pointer shrink-0 mt-0.5 transition-colors"
+                            title="Remove requirement"
                           >
-                            <X className="h-3 w-3" />
+                            <X className="h-3.5 w-3.5" />
                           </button>
-                        </Badge>
+                        </div>
                       ))
                     )}
                   </div>
@@ -480,18 +481,18 @@ export default function JobOpeningFormPage() {
               </Card>
 
               {/* Benefits */}
-              <Card className="bg-card text-card-foreground border-slate-200/60 dark:border-zinc-800 shadow-sm rounded-xl">
+              <Card className="bg-card text-card-foreground border-slate-200/60 dark:border-zinc-800 shadow-sm rounded-xl min-w-0 overflow-hidden">
                 <CardHeader className="border-b border-slate-100 dark:border-zinc-800 py-4 px-6">
                   <h3 className="text-sm font-bold text-slate-900 dark:text-slate-200 flex items-center gap-2">
                     <Bookmark className="h-4.5 w-4.5 text-blue-600 dark:text-blue-400" />
                     Perks & Benefits
                   </h3>
                 </CardHeader>
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-6 space-y-4 min-w-0">
                   <div className="flex gap-2">
-                    <div className="flex-1 flex items-center bg-slate-50/50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-lg px-3 focus-within:bg-white dark:focus-within:bg-zinc-900 focus-within:border-[#00338D]/50 focus-within:ring-1 focus-within:ring-[#00338D]/25 dark:focus-within:border-[#4d7cc7]/50 dark:focus-within:ring-[#4d7cc7]/25 transition-all">
+                    <div className="flex-1 flex items-center bg-slate-50/50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 rounded-lg px-3 focus-within:bg-white dark:focus-within:bg-zinc-900 focus-within:border-[#00338D]/50 focus-within:ring-1 focus-within:ring-[#00338D]/25 dark:focus-within:border-[#4d7cc7]/50 dark:focus-within:ring-[#4d7cc7]/25 transition-all min-w-0">
                       <input
-                        placeholder="Add benefit (e.g. Health Insurance)"
+                        placeholder="Add benefit or perk (e.g. Health Insurance)"
                         value={benefitInput}
                         onChange={(e) => setBenefitInput(e.target.value)}
                         onKeyDown={(e) => {
@@ -513,26 +514,27 @@ export default function JobOpeningFormPage() {
                     </Button>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 pt-2">
+                  <div className="flex flex-wrap gap-2 pt-2 min-w-0 w-full">
                     {watchBenefits.length === 0 ? (
                       <span className="text-xs text-slate-400 dark:text-zinc-500 italic">
                         No benefits added yet.
                       </span>
                     ) : (
                       watchBenefits.map((benefit, index) => (
-                        <Badge
+                        <div
                           key={index}
-                          className="bg-slate-100 hover:bg-slate-200/80 dark:bg-zinc-800 dark:hover:bg-zinc-700/80 text-slate-700 dark:text-zinc-300 font-semibold px-2 py-0.5 rounded-lg flex items-center gap-1.5 border border-slate-200 dark:border-zinc-750"
+                          className="bg-slate-100 hover:bg-slate-200/70 dark:bg-zinc-800 dark:hover:bg-zinc-750 text-slate-700 dark:text-zinc-300 font-medium px-2.5 py-1.5 rounded-lg flex items-start gap-1.5 border border-slate-200 dark:border-zinc-700 max-w-full text-xs leading-relaxed transition-colors shadow-2xs"
                         >
-                          <span>{benefit}</span>
+                          <span className="flex-1 text-left break-words [overflow-wrap:anywhere]">{benefit}</span>
                           <button
                             type="button"
                             onClick={() => removeBenefit(benefit)}
-                            className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer"
+                            className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-slate-200 dark:hover:bg-zinc-700 rounded p-0.5 cursor-pointer shrink-0 mt-0.5 transition-colors"
+                            title="Remove benefit"
                           >
-                            <X className="h-3 w-3" />
+                            <X className="h-3.5 w-3.5" />
                           </button>
-                        </Badge>
+                        </div>
                       ))
                     )}
                   </div>
